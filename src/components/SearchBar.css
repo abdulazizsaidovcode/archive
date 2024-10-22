@@ -1,0 +1,43 @@
+.search-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Inputlarni markazga joylashtirish */
+    gap: 10px; /* Inputlar orasida bo'sh joy */
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.search-input {
+    flex: 1; /* Har bir input kengligini tenglashtirish uchun */
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.search-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Qidiruv va filter inputlarini bir qatorda joylashtirish */
+.search-filter-bar {
+    display: flex;
+    justify-content: space-between;  /* Bo'sh joyni teng taqsimlaydi */
+    align-items: center;  /* Vertikal joylashuv */
+    gap: 15px;  /* Inputlar orasidagi bo'sh joy */
+    padding: 10px;
+}
+
+.search-input {
+    padding: 8px;
+    font-size: 16px;
+    flex: 1;  /* Har bir input bo'lim teng kenglik olishi uchun */
+    min-width: 200px;  /* Minimal kenglik */
+    max-width: 300px;  /* Maksimal kenglik */
+}

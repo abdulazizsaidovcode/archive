@@ -1,0 +1,70 @@
+/* Navbar uchun asosiy styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 1rem;
+  }
+
+  .navbar .brand {
+    color: #fff;
+    font-size: 1.5rem;
+    text-decoration: none;
+  }
+  
+
+
+
+  .navbar .nav__list .nav__list_item {
+    margin-left: 1.5rem;
+  }
+  .navbar .nav__list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .navbar .nav__list .nav__list_item a  {
+    color: gray;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+  }
+
+  .navbar .nav__list .nav__list_item a:hover {
+    color: #ddd;
+  }
+
+  .login-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .login-btn:hover {
+    background-color: #0056b3;
+  }
+
+  /* Responsiv navbar (kichik ekranlar uchun) */
+  @media (max-width: 768px) {
+    .navbar ul {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .navbar ul li {
+      margin: 0.5rem 0;
+    }
+  }

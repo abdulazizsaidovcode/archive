@@ -1,0 +1,107 @@
+/* src/components/LoginPage.css */
+
+.container-xxl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Butun sahifani qamrab olish */
+    background-color: #f8f9fa; /* Yengil fon rangi */
+}
+
+.authentication-wrapper {
+    width: 100%;
+    max-width: 400px; /* Maksimal kenglik */
+    margin: auto; /* O'rta joylash */
+    padding: 20px; /* Ichki joy */
+    background-color: #fff; /* Oq fon */
+    border-radius: 8px; /* Burchaklarni yumshatish */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Soyali effekt */
+}
+
+.card {
+    border: none; /* Chiziqlar yo'q */
+    border-radius: 8px; /* Burchaklarni yumshatish */
+}
+
+.card-body {
+    padding: 20px; /* Ichki joy */
+}
+
+.app-brand {
+    margin-bottom: 20px; /* Pastki joy */
+    display: flex; /* Flex konteyner */
+    align-items: center; /* O'rtaga joylash */
+    justify-content: center; /* O'rtaga joylash */
+}
+
+.app-brand-logo {
+    margin-right: 10px; /* O'ng tomonga joy */
+}
+
+.app-brand-text {
+    font-size: 1.5rem; /* Matn o'lchami */
+    font-weight: bold; /* Qalin matn */
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem; /* Pastki joy */
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem; /* Pastki joy */
+}
+
+.form-label {
+    font-weight: 500; /* O'rtacha qalinlik */
+}
+
+.form-control {
+    border: 1px solid #ced4da; /* Chiziq rangi */
+    border-radius: 0.375rem; /* Burchaklarni yumshatish */
+    transition: border-color 0.2s; /* O'zgarish vaqtini belgilang */
+}
+
+
+
+.form-control:focus {
+    border-color: #80bdff; /* Focus holati uchun rang */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Fokusda soyali effekt */
+}
+
+.btn {
+    background-color: #007bff; /* Tugma rangi */
+    color: #fff; /* Matn rangi */
+    border: none; /* Chiziqlar yo'q */
+    border-radius: 0.375rem; /* Burchaklarni yumshatish */
+    padding: 10px; /* Ichki joy */
+    cursor: pointer; /* O'qlar */
+    transition: background-color 0.2s; /* O'zgarish vaqtini belgilang */
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Hover holati uchun rang */
+}
+
+.text-center {
+    text-align: center; /* Matnni markazlashtirish */
+}
+
+.text-danger {
+    color: #dc3545; /* Xatolik rangi */
+}
+
+.input-group {
+    position: relative; /* Pozitsiya o'rnatish */
+}
+
+.input-group-text {
+    position: absolute; /* Pozitsiya o'rnatish */
+    right: 10px; /* O'ng tomonga joy */
+    top: 50%; /* Vertical markazga joy */
+    transform: translateY(-50%); /* Vertikal joylash */
+    border: none; /* Chiziqlar yo'q */
+    background: transparent; /* Foni yo'q */
+    cursor: pointer; /* O'qlar */
+}
+
+
