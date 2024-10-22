@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const SectionsPage = () => {
     const [sections, setSections] = useState([]); // Bo'limlar ro'yxati
     const [sectionName, setSectionName] = useState(''); // Yangi bo'lim nomi
     const [parentSection, setParentSection] = useState(null); // Parent bo'limi
+    const navigate = useNavigate(); // Navigate funksiyasi
 
     useEffect(() => {
         fetchSections();
     }, []);
-    
+
     // Bo'limlarni olish (APIdan irarxik tarzda)
     const fetchSections = async () => {
         const token = localStorage.getItem('access_token'); // Tokenni localStorage'dan oling
@@ -42,7 +45,7 @@ const SectionsPage = () => {
                 }
             }
 
-        );
+            );
             // Yangi bo'lim yaratildi, formani tozalaymiz va bo'limlarni yangilaymiz
             setSectionName('');
             setParentSection(null);
@@ -65,7 +68,7 @@ const SectionsPage = () => {
     return (
         <div className="container">
             <h2 className='mt-4'>Document Sections</h2>
-            
+
             {/* Yangi bo'lim yaratish formasi */}
             <form onSubmit={handleCreateSection} className="mb-3">
                 <div className="mb-2">
@@ -83,7 +86,7 @@ const SectionsPage = () => {
                     <label>Select Parent Section (optional):</label>
                     <select
                         className="form-control"
-                        value={parentSection || '' }
+                        value={parentSection || ''}
                         onChange={(e) => setParentSection(e.target.value)}
                     >
                         <option value="">No Parent (Root Level)</option>
@@ -92,6 +95,25 @@ const SectionsPage = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Create Section</button>
             </form>
+            <div className=" mt-4">
+                <div className="row">
+                    {/* Har bir bo'limni card shaklida chiqarish */}
+                    {sections.map((section) => (
+                        <div onClick={() => navigate(`/add/${section.id}`)} key={section.id} className="col-md-4 mb-4">
+                            <div className="card shadow-sm h-100">
+                                <div className="card-body d-flex flex-column justify-content-center align-items-center">
+                                    {/* Icon va bo'lim nomi */}
+                                    <div className="section-icon mb-3">
+                                        {/* Iconni qo'shing, agar kerak bo'lsa */}
+                                        <i className="fa fa-folder-open fa-1x"></i>
+                                    </div>
+                                    <h5 className="card-title text-center">{section.name}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 };

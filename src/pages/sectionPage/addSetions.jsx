@@ -3,11 +3,13 @@ import FolderContents from './content';
 import Sidebar from './sectionSitebar';
 import AddFolderModal from './addModalFolder';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 function Addsections() {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [datas, setDatas] = useState([])
+    const { folderId } = useParams();
 
     // Papka tanlanganda
     const handleFolderSelect = (folder) => {
@@ -28,7 +30,14 @@ function Addsections() {
                 }
             });
             console.log(response);
-            setDatas(response.data);  // Bo'limlarni o'rnatish
+            if (folderId !== 'All') {
+                let sortedFolder = response.data.filter((item) => item.id == folderId)
+                setSelectedFolder(sortedFolder[0])
+                console.log(sortedFolder);
+                setDatas(sortedFolder);  // Bo'limlarni o'rnatish
+            } else {
+                setDatas(response.data);
+            }
         } catch (error) {
             console.error('Error fetching sections:', error);
         }
@@ -87,12 +96,12 @@ function Addsections() {
         <div className="container-fluid mt-5">
             <div className="row">
                 {/* Sidebar */}
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <Sidebar folders={datas} onFolderSelect={handleFolderSelect} selectedFolder={selectedFolder} />
                 </div>
 
                 {/* Asosiy qism */}
-                <div className="col-md-8">
+                <div className="col-md-9">
                     <div className='d-flex justify-content-between align-items-center'>
                         <h3>Selected Folder: {selectedFolder ? selectedFolder.name : ''}</h3>
                         <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>Add Folder</button>

@@ -44,7 +44,7 @@ const LoginPage = () => {
         <div className="container-xxl">
             <div className="authentication-wrapper authentication-basic container-p-y">
                 <div className="authentication-inner">
-                    <div className="card shadow-none">
+                    <div className="">
                         <div className="card-body">
                             <h4 className="mb-2">Welcome to Sneat! 👋</h4>
                             <p className="mb-4">Please sign-in to your account and start the adventure</p>
