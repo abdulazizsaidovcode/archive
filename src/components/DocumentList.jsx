@@ -6,7 +6,7 @@ import './table.css';  // Jadval stylingi
 const DocumentList = ({ documents = []}) => {
     return (
         
-        <div className="card">
+        <div className="card ">
             <div className="table-responsive text-nowrap">
                 <table className="table">
                     <thead>
@@ -26,7 +26,7 @@ const DocumentList = ({ documents = []}) => {
                                 <td>{new Date(document.created_at).toLocaleDateString()}</td>
                                 <td>
                                     {/* Hujjatni yuklab olish havolasi */}
-                                    <a href={document.file} download className="btn btn-primary">
+                                    <a target='blank' href={document.file} download className="btn btn-primary">
                                         Yuklab olish
                                     </a>
                                 </td>

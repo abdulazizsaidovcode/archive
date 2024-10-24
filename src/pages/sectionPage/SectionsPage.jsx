@@ -1,12 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { apirl } from '../../helpers/urls';
+import SearchBar from '../../components/SearchBar';
 
 
 const SectionsPage = () => {
     const [sections, setSections] = useState([]); // Bo'limlar ro'yxati
     const [sectionName, setSectionName] = useState(''); // Yangi bo'lim nomi
     const [parentSection, setParentSection] = useState(null); // Parent bo'limi
+    
+    const [searchTermNumber, setSearchTermNumber] = useState('');
+    const [searchTermName, setSearchTermName] = useState('');
+    const [createdDate, setCreatedDate] = useState('');
+
+    const handleNumberChange = (e) => {
+        setSearchTermNumber(e.target.value);
+    };
+
+    const handleNameChange = (e) => {
+        setSearchTermName(e.target.value);
+    };
     const navigate = useNavigate(); // Navigate funksiyasi
 
     useEffect(() => {
@@ -17,13 +31,14 @@ const SectionsPage = () => {
     const fetchSections = async () => {
         const token = localStorage.getItem('access_token'); // Tokenni localStorage'dan oling
         try {
-            const response = await axios.get('http://127.0.0.1:8000/v1/document_section/',
+            const response = await axios.get(apirl + 'v1/document_section/',
                 {
                     headers: {
                         'Authorization': `Bearer ${token}` // Tokenni header'ga qo'shish
                     }
                 }
             );
+            console.log(response);
             console.log(response);
             setSections(response.data);
         } catch (error) {
@@ -36,7 +51,7 @@ const SectionsPage = () => {
         e.preventDefault();
         const token = localStorage.getItem('access_token'); // Tokenni localStorage'dan oling
         try {
-            const response = await axios.post('http://127.0.0.1:8000/v1/document_section/', {
+            const response = await axios.post(apirl + 'v1/document_section/', {
                 name: sectionName,
                 parent: parentSection, // Parent bo'limni yuboramiz
             }, {
@@ -56,21 +71,28 @@ const SectionsPage = () => {
     };
 
     // Rekursiv tarzda bo'limlar ierarxiyasini ko'rsatish funksiyasi
-    const renderSections = (sections, level = 0) => {
-        return sections.map((section) => (
-            <option key={section.id} value={section.id}>
-                {`${'—'.repeat(level)} ${section.name}`}
-                {section.children.length > 0 && renderSections(section.children, level + 1)}
-            </option>
-        ));
-    };
+    // const renderSections = (sections, level = 0) => {
+    //     return sections.map((section) => (
+    //         <option key={section.id} value={section.id}>
+    //             {`${'—'.repeat(level)} ${section.name}`}
+    //             {section.children && section.children.length > 0 && renderSections(section.children, level + 1)}
+    //         </option>
+    //     ));
+    // };
 
     return (
         <div className="container">
             <h2 className='mt-4'>Document Sections</h2>
-
+            <SearchBar
+                searchTermNumber={searchTermNumber}
+                searchTermName={searchTermName}
+                handleNumberChange={handleNumberChange}
+                handleNameChange={handleNameChange}
+                createdDate={createdDate}
+                handleCreatedDateChange={(e) => setCreatedDate(e.target.value)}
+            />
             {/* Yangi bo'lim yaratish formasi */}
-            <form onSubmit={handleCreateSection} className="mb-3">
+            {/* <form onSubmit={handleCreateSection} className="mb-3">
                 <div className="mb-2">
                     <label>Section Name:</label>
                     <input
@@ -90,11 +112,11 @@ const SectionsPage = () => {
                         onChange={(e) => setParentSection(e.target.value)}
                     >
                         <option value="">No Parent (Root Level)</option>
-                        {renderSections(sections)} {/* Bo'limlar irarxiyasini ko'rsatish */}
+                        {renderSections(sections)}
                     </select>
                 </div>
                 <button type="submit" className="btn btn-primary">Create Section</button>
-            </form>
+            </form> */}
             <div className=" mt-4">
                 <div className="row">
                     {/* Har bir bo'limni card shaklida chiqarish */}

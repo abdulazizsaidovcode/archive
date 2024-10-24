@@ -12,7 +12,7 @@ const FolderContents = ({ folder, onFolderSelect }) => {
               style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
             >
               <p className="hover-underline" style={{ marginBottom: 0 }} onClick={() => onFolderSelect(child)}>{child.name} </p>
-              <span className="" style={{ width: 20 }} onClick={() => handleDownloadFolder(folder)}>
+              <span className="d-flex" style={{ width: 20 }} onClick={() => handleDownloadFolder(folder)}>
                 <svg
                   version="1.1"
                   id="Layer_1"

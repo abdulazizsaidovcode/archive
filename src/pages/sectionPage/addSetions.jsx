@@ -9,6 +9,7 @@ function Addsections() {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [datas, setDatas] = useState([])
+    const [mainFolder, setmainFolder] = useState(false)
     const { folderId } = useParams();
 
     // Papka tanlanganda
@@ -18,7 +19,7 @@ function Addsections() {
 
     useEffect(() => {
         fetchSections();
-    }, []);
+    }, [folderId]);
 
     // Bo'limlarni olish funksiyasi
     const fetchSections = async () => {
@@ -47,6 +48,8 @@ function Addsections() {
     const handleAddFolder = async (folderName) => {
         if (!selectedFolder) {
             alert('Avval papkani tanlash kerak');
+            console.log(selectedFolder);
+            console.log(mainFolder);
             return;
         }
 
@@ -57,7 +60,7 @@ function Addsections() {
                 parent: selectedFolder.id, // Tanlangan papka `parent`
             };
 
-            const response = await axios.post('http://127.0.0.1:8000/v1/document_section/', newFolder, {
+            const response = await axios.post('http://127.0.0.1:8000/v1/section/', newFolder, {
                 headers: {
                     'Authorization': `Bearer ${token}` // Tokenni qo'shish
                 }
@@ -93,15 +96,16 @@ function Addsections() {
     };
 
     return (
-        <div className="container-fluid mt-5">
+        <div className="container-fluid">
             <div className="row">
                 {/* Sidebar */}
-                <div className="col-md-3">
+                <div className="col-md-3 border-right h-screen pt-5" style={{height: '90vh'}}>
+                    <h2>Main folders</h2>
                     <Sidebar folders={datas} onFolderSelect={handleFolderSelect} selectedFolder={selectedFolder} />
                 </div>
 
                 {/* Asosiy qism */}
-                <div className="col-md-9">
+                <div className="col-md-9 w-100 pt-5">
                     <div className='d-flex justify-content-between align-items-center'>
                         <h3>Selected Folder: {selectedFolder ? selectedFolder.name : ''}</h3>
                         <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>Add Folder</button>
@@ -114,7 +118,7 @@ function Addsections() {
                 </div>
             </div>
             {/* Modal */}
-            <AddFolderModal show={showModal} handleClose={() => setShowModal(false)} onSave={handleAddFolder} />
+            <AddFolderModal show={showModal} handleClose={() => setShowModal(false)} onSave={handleAddFolder} setmainFolder={setmainFolder} />
         </div>
     );
 }

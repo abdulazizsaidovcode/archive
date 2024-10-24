@@ -1,12 +1,16 @@
 // src/components/LoginPage.jsx
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 // import './core.css';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const navigate = useNavigate(); // Navigate funksiyasi
+
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -29,9 +33,8 @@ const LoginPage = () => {
                 const data = await response.json();
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
-                alert('Login successful!');
-                // Sahifani yo'naltirish uchun:
-                window.location.href = '/sections'; // Asosiy sahifaga o'tish
+                toast.success('Login successful!');
+                navigate('/sections')// Asosiy sahifaga o'tish
             } else {
                 setError('Login failed. Please check your credentials.');
             }
@@ -46,7 +49,7 @@ const LoginPage = () => {
                 <div className="authentication-inner">
                     <div className="">
                         <div className="card-body">
-                            <h4 className="mb-2">Welcome to Sneat! 👋</h4>
+                            <h4 className="mb-2">Welcome back👋</h4>
                             <p className="mb-4">Please sign-in to your account and start the adventure</p>
                             {error && <div className="alert alert-danger">{error}</div>}
                             <form onSubmit={handleLogin}>
@@ -76,7 +79,7 @@ const LoginPage = () => {
                                     />
                                 </div>
                                 <div className="mb-3">
-                                    <button className=" btn-primary text-white d-grid w-100" type="submit">Sign in</button>
+                                    <button className="btn btn-primary text-white d-grid w-100" type="submit">Sign in</button>
                                 </div>
                             </form>
                         </div>

@@ -12,21 +12,21 @@ const Sidebar = ({ folders, onFolderSelect, selectedFolder }) => {
     }
     const renderFolders = (folders) => {
         return folders.map((folder) => (
-            <div key={folder.id} className={`accordion-item  `}>
+            <div onClick={() => onFolderSelect(folder)} key={folder.id} className={`accordion-item`}>
                 <h2 className="accordion-header" id={`heading-${folder.id}`}>
-                    <div style={{ paddingRight: 10 }} className={`d-flex align-items-center justify-content-between  ${selectedFolder && selectedFolder.id === folder.id ? 'bg-primary' : ''}`}>
+                    <div style={{ paddingRight: 10 }} className={`d-flex align-items-center justify-content-between p-2 rounded  ${selectedFolder && selectedFolder.id === folder.id ? 'bg-primary' : 'bg-gray-light'}`}>
                         {/* Folderni tanlash tugmasi */}
-                        <button
-                            onClick={() => onFolderSelect(folder)}
-                            className={`accordion-button folder-select-btn ${selectedFolder && selectedFolder.id === folder.id ? 'bg-primary text-white' : 'text-dark'}`}
+                        <p
+                            
+                            className={`accordion-button folder-select-btn mb-0 h6 ${selectedFolder && selectedFolder.id === folder.id ? 'bg-primary text-white' : 'text-dark'}`}
                             type="button"
                         >
                             {folder.name}
-                        </button>
+                        </p>
                         {/* Faqat icon accordionni ochib-yopishi uchun */}
                         <span
                             onClick={() => changeOpen(folder.id)}
-                            className="border-none"
+                            className="d-flex"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target={`#collapse-${folder.id}`}
@@ -34,11 +34,12 @@ const Sidebar = ({ folders, onFolderSelect, selectedFolder }) => {
                             aria-controls={`collapse-${folder.id}`}
                         >
                             {/* `aria-expanded` orqali iconni o'zgartirish */}
-                            <i className={`fa ${isOpen === folder.id ? 'fa-chevron-up' : 'fa-chevron-down'} ${selectedFolder && selectedFolder.id === folder.id ? 'text-white' : 'text-dark'}`}></i>
+                            <i className={`fa fa-chevron-right ${selectedFolder && selectedFolder.id === folder.id ? 'text-white' : 'text-dark'}`}></i>
                         </span>
                     </div>
                 </h2>
-                <div
+                {/* --------- recursiya uchun chillarni ham qayda ishlab chiqorib beradi -------- */}
+                {/* <div
                     id={`collapse-${folder.id}`}
                     className="accordion-collapse collapse"
                     aria-labelledby={`heading-${folder.id}`}
@@ -52,14 +53,14 @@ const Sidebar = ({ folders, onFolderSelect, selectedFolder }) => {
                             'No subfolders'
                         )}
                     </div>
-                </div>
+                </div> */}
             </div>
         ));
     };
 
     return (
         <div className="accordion" id="accordionExample">
-            {renderFolders(folders)}
+            {folders && folders.length > 0 ? renderFolders(folders) : "no Folders! 😑"}
         </div>
     );
 };
