@@ -7,6 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import UploadFileModal from '../../components/modals/fileuploadmodal';
 import { apirl } from '../../helpers/urls';
 import FileContents from './document';
+import { toast } from 'react-toastify';
 
 function Addsections() {
     const [selectedFolder, setSelectedFolder] = useState(null);
@@ -108,11 +109,15 @@ function Addsections() {
     const handleAddFolder = async (folderName) => {
         try {
             const token = localStorage.getItem('access_token');
+            console.log(selectedFolder, 1234);
+            if (selectedFolder == null) {
+                toast.warning('you need select folder or you need mark create main folder ')
+            }
+            
             const newFolder = {
                 name: folderName,
                 parent: mainFolder ? null : selectedFolder.id,
             };
-            console.log(newFolder);
 
             const response = await axios.post(apirl + '/v1/folder/', newFolder, {
                 headers: {
@@ -138,13 +143,15 @@ function Addsections() {
                     return folder;
                 });
             };
-
             const updatedDatas = updateFolders(datas, selectedFolder.id);
             setDatas(updatedDatas);  // Datas holatini yangilash
             setShowModal(false);
             fetchSections()
             setSelectedFolder(createdFolder);  // Tanlangan papkani yangi papka bilan o'zgartirish
             setExpandedFolders((prev) => [...prev, selectedFolder.id]); // Yangi papka qo'shilganda hozirgi ochiq holatni saqlab qolish
+
+
+
         } catch (error) {
             console.error('Error adding folder:', error);
         }
@@ -170,6 +177,7 @@ function Addsections() {
             console.error('Faylni yuklashda xato yuz berdi:', error);
         }
     };
+    console.log(selectedFolder);
 
     return (
         <div className="container-fluid">
@@ -194,16 +202,16 @@ function Addsections() {
                                 <p className='mb-0 ml-2'> {selectedFolder ? buildBreadcrumb(selectedFolder, datas) : 'No folder selected'}</p>
                             </div>
                             <div>
-                                <button className="btn btn-sm btn-success mr-2" onClick={() => setShowFileModal(true)}>
+                                {selectedFolder && !selectedFolder.children && <button className="btn btn-sm btn-success mr-2" onClick={() => setShowFileModal(true)}>
                                     Add file <i className="fa-solid fa-plus text-white"></i>
-                                </button>
-                                <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>
+                                </button>}
+                                {((selectedFolder && !selectedFolder.documents.length) || (selectedFolder == null)) && <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>
                                     Add Folder <i className="fa-solid fa-plus text-white"></i>
-                                </button>
+                                </button>}
                             </div>
                         </div>
                     </div>
-                    {selectedFolder ? (
+                    {selectedFolder && !selectedFolder.documents.length ? (
                         <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} />
                     ) : (
                         <p>Please select a folder to view its contents.</p>
