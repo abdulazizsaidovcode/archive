@@ -5,13 +5,7 @@ import './SearchBar.css';  // Qidiruv paneli uchun styling
 const SearchBar = ({ searchTermNumber, searchTermName, handleNumberChange, handleNameChange,  createdDate, handleCreatedDateChange }) => {
     return (
         <div className="search-bar">
-            <input
-                type="text"
-                placeholder="hujjat raqami"
-                value={searchTermNumber}
-                onChange={handleNumberChange}
-                className="search-input"
-            />
+            
             <input
                 type="text"
                 placeholder="hujjat nomi"

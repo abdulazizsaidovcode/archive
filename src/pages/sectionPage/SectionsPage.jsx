@@ -9,10 +9,12 @@ const SectionsPage = () => {
     const [sections, setSections] = useState([]); // Bo'limlar ro'yxati
     const [sectionName, setSectionName] = useState(''); // Yangi bo'lim nomi
     const [parentSection, setParentSection] = useState(null); // Parent bo'limi
-    
+
     const [searchTermNumber, setSearchTermNumber] = useState('');
     const [searchTermName, setSearchTermName] = useState('');
     const [createdDate, setCreatedDate] = useState('');
+
+    const [searchFolderName, setSearchFolderName] = useState('')
 
     const handleNumberChange = (e) => {
         setSearchTermNumber(e.target.value);
@@ -25,13 +27,15 @@ const SectionsPage = () => {
 
     useEffect(() => {
         fetchSections();
-    }, []);
+    }, [searchFolderName]);
 
     // Bo'limlarni olish (APIdan irarxik tarzda)
     const fetchSections = async () => {
+        let url = apirl + `/v1/folder/${searchFolderName && '?name=' + searchFolderName}`
         const token = localStorage.getItem('access_token'); // Tokenni localStorage'dan oling
+
         try {
-            const response = await axios.get(apirl + 'v1/document_section/',
+            const response = await axios.get(url,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}` // Tokenni header'ga qo'shish
@@ -70,7 +74,7 @@ const SectionsPage = () => {
         }
     };
 
-    // Rekursiv tarzda bo'limlar ierarxiyasini ko'rsatish funksiyasi
+    // // Rekursiv tarzda bo'limlar ierarxiyasini ko'rsatish funksiyasi
     // const renderSections = (sections, level = 0) => {
     //     return sections.map((section) => (
     //         <option key={section.id} value={section.id}>
@@ -82,15 +86,16 @@ const SectionsPage = () => {
 
     return (
         <div className="container">
-            <h2 className='mt-4'>Document Sections</h2>
-            <SearchBar
-                searchTermNumber={searchTermNumber}
-                searchTermName={searchTermName}
-                handleNumberChange={handleNumberChange}
-                handleNameChange={handleNameChange}
-                createdDate={createdDate}
-                handleCreatedDateChange={(e) => setCreatedDate(e.target.value)}
-            />
+            <div className='d-flex align-items-center justify-content-between mt-4'>
+                <h2>Document Sections</h2>
+                <input
+                    type="text"
+                    placeholder="hujjat nome"
+                    value={searchFolderName}
+                    onChange={(e) => setSearchFolderName(e.target.value)}
+                    className="search-input"
+                /></div>
+
             {/* Yangi bo'lim yaratish formasi */}
             {/* <form onSubmit={handleCreateSection} className="mb-3">
                 <div className="mb-2">
@@ -120,20 +125,20 @@ const SectionsPage = () => {
             <div className=" mt-4">
                 <div className="row">
                     {/* Har bir bo'limni card shaklida chiqarish */}
-                    {sections.map((section) => (
+                    {sections && sections.length ? sections.map((section) => (
                         <div onClick={() => navigate(`/add/${section.id}`)} key={section.id} className="col-md-4 mb-4">
                             <div className="card shadow-sm h-100">
                                 <div className="card-body d-flex flex-column justify-content-center align-items-center">
-                                    {/* Icon va bo'lim nomi */}
                                     <div className="section-icon mb-3">
-                                        {/* Iconni qo'shing, agar kerak bo'lsa */}
                                         <i className="fa fa-folder-open fa-1x"></i>
                                     </div>
                                     <h5 className="card-title text-center">{section.name}</h5>
                                 </div>
                             </div>
                         </div>
-                    ))}
+                    )) :
+                        <div className='col-md-4 mb-4'>folder topilmadi</div>
+                    }
                 </div>
             </div>
         </div>
