@@ -30,7 +30,10 @@ const LoginPage = () => {
             });
 
             if (response.ok) {
+                
                 const data = await response.json();
+                console.log(data);
+                
                 localStorage.setItem('access_token', data.access);
                 localStorage.setItem('refresh_token', data.refresh);
                 toast.success('Login successful!');

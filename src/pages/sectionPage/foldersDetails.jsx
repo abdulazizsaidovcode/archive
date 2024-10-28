@@ -1,27 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import FolderContents from './content';
-import Sidebar from './sectionSitebar';
 import AddFolderModal from '../../components/modals/addFolderModal';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import UploadFileModal from '../../components/modals/fileuploadmodal';
-import { apirl } from '../../helpers/urls';
+import { apirl, document_file_url, document_type_url, document_url } from '../../helpers/urls';
 import FileContents from './document';
 import { toast } from 'react-toastify';
+import FolderDetailSidebar from '../../components/sitebar/folderDetailSitebar';
+import AddDocumentModal from '../../components/modals/addDocumentModal';
+import { useFetch } from '../../hooks/fetchData';
+import DocumentFileContents from './documentFile';
 
 function Addsections() {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showFileModal, setShowFileModal] = useState(false);
+    const [selectedDocument, setSelectedDocument] = useState('');
+    const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [datas, setDatas] = useState([]);
     const [expandedFolders, setExpandedFolders] = useState([]); // Ochilgan papkalarni saqlash uchun holat
     const [mainFolder, setmainFolder] = useState(false);
     const { folderId } = useParams();
     const navigate = useNavigate();
 
+    const { data: docimentType } = useFetch(document_type_url)
+
+
     // Papka tanlanganda
     const handleFolderSelect = (folder) => {
         setSelectedFolder(folder);
+        setSelectedDocument('')
     };
 
     useEffect(() => {
@@ -39,11 +48,11 @@ function Addsections() {
             });
 
             if (folderId !== 'All') {
-                let sortedFolder = response.data.filter((item) => item.id == folderId);
+                let sortedFolder = response.data.results.filter((item) => item.id == folderId);
                 setSelectedFolder(sortedFolder[folderId]);
                 setDatas(sortedFolder);
             } else {
-                setDatas(response.data);
+                setDatas(response.data.results);
             }
         } catch (error) {
             console.error('Error fetching sections:', error);
@@ -75,7 +84,6 @@ function Addsections() {
             }
             breadcrumb.push(currentFolder.name);  // Har bir papka nomini qo'shamiz
         };
-
         findPath(folder);  // Tanlangan papkadan boshlaymiz
         return breadcrumb.join(' / ');  // Qator qilib chiqarish
     };
@@ -83,13 +91,18 @@ function Addsections() {
 
     // Orqaga qaytish funksiyasi
     const handleBack = () => {
-        if (selectedFolder) {
-            const parentFolder = findParentFolder(datas, selectedFolder.id);  // Tanlangan papka ota papkasini topamiz
-            if (parentFolder) {
-                setSelectedFolder(parentFolder);  // Tanlangan papkani ota papkaga o'zgartiramiz
-            } else {
-                console.log('Parent folder topilmadi');
+        if (selectedDocument) {
+            setSelectedDocument('')
+        } else {
+            if (selectedFolder) {
+                const parentFolder = findParentFolder(datas, selectedFolder.id);  // Tanlangan papka ota papkasini topamiz
+                if (parentFolder) {
+                    setSelectedFolder(parentFolder);  // Tanlangan papkani ota papkaga o'zgartiramiz
+                } else {
+                    console.log('Parent folder topilmadi');
+                }
             }
+            setSelectedDocument('')
         }
     };
 
@@ -113,7 +126,7 @@ function Addsections() {
             if (selectedFolder == null) {
                 toast.warning('you need select folder or you need mark create main folder ')
             }
-            
+
             const newFolder = {
                 name: folderName,
                 parent: mainFolder ? null : selectedFolder.id,
@@ -163,20 +176,55 @@ function Addsections() {
             const formData = new FormData();
 
             formData.append('file', selectedFile);
-
-            const response = await axios.post('http://127.0.0.1:8000/v1/documents/', formData, {
+            formData.append('document', selectedDocument.id);
+            console.log(selectedDocument.id, 1244);
+            
+            // APIga faylni yuklash
+            const response = await axios.post(document_file_url, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
                 },
             });
 
-            console.log('Fayl yuklandi:', response.data);
+            toast.success('Fayl yuklandi:', response.data);
             setShowFileModal(false);
         } catch (error) {
-            console.error('Faylni yuklashda xato yuz berdi:', error);
+            toast.error('Faylni yuklashda xato yuz berdi:', error);
         }
     };
+    const handleDocumentUpload = async (selectedFile) => {
+        try {
+            const token = localStorage.getItem('access_token');
+
+            // APIga faylni yuklash
+            console.log(selectedFile);
+            let newData = {
+                ...selectedFile,
+                "created_at": "2024-10-28",
+                "folder": selectedFolder.id,
+                "owner": 1,
+            }
+
+            console.log(newData);
+
+
+            const response = await axios.post(document_url, newData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            toast.success('Fayl yuklandi: ');
+            setShowFileModal(false);
+            console.log(response);
+
+        } catch (error) {
+            toast.error('Faylni yuklashda xato yuz berdi:', error);
+        }
+    };
+
+
+
     console.log(selectedFolder);
 
     return (
@@ -184,7 +232,7 @@ function Addsections() {
             <div className="row">
                 <div className="col-md-3 border-right h-screen pt-5" style={{ height: '90vh' }}>
                     <h2>Main folders</h2>
-                    <Sidebar
+                    <FolderDetailSidebar
                         folders={datas}
                         onFolderSelect={handleFolderSelect}
                         selectedFolder={selectedFolder}
@@ -202,7 +250,7 @@ function Addsections() {
                                 <p className='mb-0 ml-2'> {selectedFolder ? buildBreadcrumb(selectedFolder, datas) : 'No folder selected'}</p>
                             </div>
                             <div>
-                                {selectedFolder && !selectedFolder.children && <button className="btn btn-sm btn-success mr-2" onClick={() => setShowFileModal(true)}>
+                                {!selectedDocument && selectedFolder && !selectedFolder.children && <button className="btn btn-sm btn-success mr-2" onClick={() => setShowDocumentModal(true)}>
                                     Add file <i className="fa-solid fa-plus text-white"></i>
                                 </button>}
                                 {((selectedFolder && !selectedFolder.documents.length) || (selectedFolder == null)) && <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>
@@ -211,14 +259,24 @@ function Addsections() {
                             </div>
                         </div>
                     </div>
-                    {selectedFolder && !selectedFolder.documents.length ? (
+                    {selectedFolder && (!selectedFolder.documents.length || selectedFolder) ? (
                         <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} />
                     ) : (
-                        <p>Please select a folder to view its contents.</p>
+                        !selectedDocument && <p>Avval biron bir folderni tanlang !</p>
                     )}
-                    {selectedFolder && selectedFolder.documents && <FileContents file={selectedFolder} />}
+                    {!selectedDocument && selectedFolder && selectedFolder.documents && <FileContents file={selectedFolder} clear={''} setSelectedDocument={setSelectedDocument} />}
+                    {selectedDocument && < DocumentFileContents file={selectedDocument} openModal={() => setShowFileModal(true)} />}
+
+                    {!selectedFolder?.children && !selectedFolder?.documents?.length && <p>file yoki folder topilmadi !</p>}
+
                 </div>
             </div>
+            <AddDocumentModal
+                show={showDocumentModal}
+                handleClose={() => setShowDocumentModal(false)}
+                onSave={handleDocumentUpload}
+                documentTypes={docimentType}
+            />
             <UploadFileModal
                 show={showFileModal}
                 handleClose={() => setShowFileModal(false)}

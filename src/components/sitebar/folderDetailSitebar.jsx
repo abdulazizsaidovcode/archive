@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Sidebar = ({ folders, onFolderSelect, selectedFolder }) => {
+const FolderDetailSidebar = ({ folders, onFolderSelect, selectedFolder }) => {
     const [isOpen, setIsOpen] = useState('')
 
     function changeOpen(id) {
@@ -65,4 +65,4 @@ const Sidebar = ({ folders, onFolderSelect, selectedFolder }) => {
     );
 };
 
-export default Sidebar;
+export default FolderDetailSidebar;

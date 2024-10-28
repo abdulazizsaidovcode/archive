@@ -25,7 +25,7 @@ const FolderContents = ({ folder, onFolderSelect }) => {
           ))}
         </ul>
       ) : (
-        <p>No subfolders or files.</p>
+        <p></p>
       )}
     </div>
   );

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import SectionsPage from './pages/sectionPage/SectionsPage';
+import SectionsPage from './pages/sectionPage/folderPage.jsx';
 import LoginPage from './pages/auth/LoginPage';
 import DocumentArchive from './pages/documentArchive/documentArchive';
-import Addsections from './pages/sectionPage/addSetions';
+import Addsections from './pages/sectionPage/foldersDetails.jsx';
 import Notfound from './pages/notfound/notfound';
 import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './helpers/ProtectedRoute';

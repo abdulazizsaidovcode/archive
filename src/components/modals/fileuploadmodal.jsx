@@ -31,14 +31,14 @@ function UploadFileModal({ show, handleClose, onSave }) {
                     </div>
                     <div className="modal-body">
                         <input ref={fileUpload} type="file" id="formFile" className="form-control" onChange={handleFileChange} />
-                        <div className='mt-4'>
+                        {/* <div className='mt-4'>
                             <div class="form-check">
                                 <input onChange={(e) => changeMain(e)} class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
                                 <label class="form-check-label" for="defaultCheck1">
                                    yopiq holatda saqlash
                                 </label>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" onClick={handleClose}>Bekor qilish</button>

@@ -1,13 +1,19 @@
+import { useEffect, useState } from "react";
 import { apirl } from "../../helpers/urls";
+import { useFetch } from "../../hooks/fetchData";
+import DocumentFileContents from "./documentFile";
 
-const FileContents = ({ file }) => {
-    console.log(file, 'aaaa');
+const FileContents = ({ file, clear, setSelectedDocument}) => {
+    const { data } = useFetch('')
+
+
     return (
         <div>
             {file.documents && file.documents.length > 0 ? (
                 <ul className="list-group">
                     {file.documents.map((child) => (
                         <li
+                            onClick={() => setSelectedDocument(child)}
                             key={child.id}
                             className="list-group-item d-flex justify-content-between align-items-center"
                             style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
@@ -23,7 +29,7 @@ const FileContents = ({ file }) => {
                     ))}
                 </ul>
             ) : (
-                <p>No subfolders or files.</p>
+                <p></p>
             )}
         </div>
     );

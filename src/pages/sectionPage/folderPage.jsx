@@ -42,9 +42,7 @@ const SectionsPage = () => {
                     }
                 }
             );
-            console.log(response);
-            console.log(response);
-            setSections(response.data);
+            setSections(response.data.results);
         } catch (error) {
             console.error('Error fetching sections:', error);
         }
