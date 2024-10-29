@@ -3,12 +3,12 @@ import { toast } from 'react-toastify';
 import { useFetch } from '../../hooks/fetchData';
 import { document_type_url } from '../../helpers/urls';
 
-const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTypes = [{ id: 1, name: 'sallom' }] }) => {
+const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTypes }) => {
     const [folderName, setFolderName] = useState('');
     const [title, setTitle] = useState('');
     const [permission, setPermission] = useState('PUBLIC');
     const [documentType, setDocumentType] = useState('');
-    const [documentNumber, setDocumentNumber] = useState(0)
+    const [documentNumber, setDocumentNumber] = useState('')
 
     
     const input = useRef();
@@ -20,7 +20,7 @@ const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTy
                 title,
                 permission,
                 document_type: +documentType,
-                document_number: +documentNumber,
+                document_number: documentNumber,
                 folder: currentFolder ? currentFolder.id : null
             });
 
@@ -61,12 +61,12 @@ const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTy
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
-                            <label htmlFor="title" className="mt-3">Hujjat soni</label>
+                            <label htmlFor="title" className="mt-3">Hujjat raqami</label>
                             <input
-                                type="number"
+                                type="text"
                                 className="form-control"
                                 id="title"
-                                placeholder="Hujjat sonini kiritng"
+                                placeholder="Hujjat raqami kiritng"
                                 value={documentNumber}
                                 onChange={(e) => setDocumentNumber(e.target.value)}
                             />
@@ -81,7 +81,8 @@ const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTy
                             >
                                 <option value="PUBLIC">Public</option>
                                 <option value="PRIVATE">Private</option>
-                            </select>
+                                <option value="DEPARTMENT">department</option>
+                            </select>›
 
                             {/* Document Type input */}
                             <label htmlFor="documentType" className="mt-3">Hujjat turi</label>

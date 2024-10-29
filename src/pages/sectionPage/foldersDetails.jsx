@@ -11,6 +11,7 @@ import FolderDetailSidebar from '../../components/sitebar/folderDetailSitebar';
 import AddDocumentModal from '../../components/modals/addDocumentModal';
 import { useFetch } from '../../hooks/fetchData';
 import DocumentFileContents from './documentFile';
+import Pagination from '../../components/pagenation';
 
 function Addsections() {
     const [selectedFolder, setSelectedFolder] = useState(null);
@@ -21,6 +22,9 @@ function Addsections() {
     const [datas, setDatas] = useState([]);
     const [expandedFolders, setExpandedFolders] = useState([]); // Ochilgan papkalarni saqlash uchun holat
     const [mainFolder, setmainFolder] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize, setPageSize] = useState(5);
+    const [totalPages, setTotalPages] = useState(1);
     const { folderId } = useParams();
     const navigate = useNavigate();
 
@@ -35,13 +39,13 @@ function Addsections() {
 
     useEffect(() => {
         fetchSections();
-    }, [folderId]);
+    }, [folderId, currentPage, pageSize]);
 
     // Bo'limlarni olish funksiyasi
     const fetchSections = async () => {
         const token = localStorage.getItem('access_token');
         try {
-            const response = await axios.get(apirl + '/v1/folder/', {
+            const response = await axios.get(apirl + `/v1/folder/?page=${currentPage}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -51,7 +55,9 @@ function Addsections() {
                 let sortedFolder = response.data.results.filter((item) => item.id == folderId);
                 setSelectedFolder(sortedFolder[folderId]);
                 setDatas(sortedFolder);
+
             } else {
+                setTotalPages(Math.ceil(response.data.count / pageSize));
                 setDatas(response.data.results);
             }
         } catch (error) {
@@ -178,7 +184,7 @@ function Addsections() {
             formData.append('file', selectedFile);
             formData.append('document', selectedDocument.id);
             console.log(selectedDocument.id, 1244);
-            
+
             // APIga faylni yuklash
             const response = await axios.post(document_file_url, formData, {
                 headers: {
@@ -239,6 +245,13 @@ function Addsections() {
                         onToggleExpand={toggleFolderExpand} // Ochish yoki yopish
                         isExpanded={isFolderExpanded} // Papka ochiq yoki yopiqligini tekshirish
                     />
+                    {folderId == 'All' && <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        onPageChange={setCurrentPage}
+                    />}
                 </div>
 
                 <div className="col-md-9 w-100 pt-5">

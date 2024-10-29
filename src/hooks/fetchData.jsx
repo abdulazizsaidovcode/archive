@@ -18,6 +18,8 @@ export const useFetch = (url) => {
         axios.get(url, config)
             .then((response) => {
                 setData(response.data);
+                console.log(response);
+                
             })
             .catch(() => {
                 console.error('Error fetching sections:', error);
