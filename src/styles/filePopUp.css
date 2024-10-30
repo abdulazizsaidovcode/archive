@@ -1,0 +1,33 @@
+.file-container {
+    position: relative;
+    display: inline-block;
+}
+
+.file-name {
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Tooltip styling */
+.tooltipp {
+    visibility: hidden;
+    width: max-content;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    bottom: -50%; /* Position above the text */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    white-space: nowrap;
+    font-size: 0.9rem;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Show tooltip on hover */
+.file-name:hover .tooltipp {
+    visibility: visible;
+}

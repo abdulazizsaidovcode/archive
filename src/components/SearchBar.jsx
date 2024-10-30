@@ -1,50 +1,86 @@
-// src/components/SearchBar.js
-import React from 'react';
-import './SearchBar.css';  // Qidiruv paneli uchun styling
+import React, { useContext, useState, useEffect, useCallback } from 'react';
+import './SearchBar.css';
+import { debounce } from 'lodash';
+import { DocumentContext } from '../context/documents';
+import axios from 'axios';
 
-const SearchBar = ({ searchTermNumber, searchTermName, handleNumberChange, handleNameChange, createdDate, handleCreatedDateChange, documentTypes, setDocumentType, documentType }) => {
+const SearchBar = () => {
+    const { setDocuments, documentTypes } = useContext(DocumentContext); 
+    const [localSearchName, setLocalSearchName] = useState('');
+    const [localSearchNumber, setLocalSearchNumber] = useState('');
+    const [localCreatedDate, setLocalCreatedDate] = useState('');
+    const [documentType, setDocumentType] = useState('');
 
-    console.log(documentTypes);
+    const fetchDocuments = useCallback(async () => {
+        const queryParams = new URLSearchParams();
+        if (localSearchName) queryParams.append('title', localSearchName);
+        if (localSearchNumber) queryParams.append('document_number', localSearchNumber);
+        if (localCreatedDate) queryParams.append('created_at', localCreatedDate);
+        if (documentType) queryParams.append('type', documentType);
+
+        const url = `http://127.0.0.1:8000/v1/documents/?${queryParams.toString()}`;
+
+        try {
+            const response = await axios.get(url);
+            const data = response
+            setDocuments(data.data.results);
+            console.log(data);
+        } catch (error) {
+            console.error("Failed to fetch documents:", error);
+        }
+    }, [localSearchName, localSearchNumber, localCreatedDate, documentType, setDocuments]);
+
+    const debouncedFetchDocuments = debounce(fetchDocuments, 200);
+
+    useEffect(() => {
+        debouncedFetchDocuments();
+        return () => debouncedFetchDocuments.cancel(); 
+    }, [localSearchName, localSearchNumber, localCreatedDate, documentType]);
 
     return (
         <div className="search-bar">
+            <input
+                type="text"
+                placeholder="hujjat nomi"
+                value={localSearchName}
+                onChange={(e) => setLocalSearchName(e.target.value)}
+                className="search-input"
+            />
 
             <input
                 type="text"
-                placeholder="hujjat nomi"
-                value={searchTermName}
-                onChange={handleNameChange}
+                placeholder="hujjat raqami"
+                value={localSearchNumber}
+                onChange={(e) => setLocalSearchNumber(e.target.value)}
                 className="search-input"
             />
-            <input
-                type="text"
-                placeholder="hujjat nomi"
-                value={searchTermNumber}
-                onChange={handleNumberChange}
-                className="search-input"
-            />
-            {/* Sana bo'yicha qidirish */}
+
             <input
                 type="date"
-                value={createdDate}
-                onChange={handleCreatedDateChange}
+                value={localCreatedDate}
+                onChange={(e) => setLocalCreatedDate(e.target.value)}
                 className="search-input"
             />
-            {documentTypes && documentTypes.length > 0 ? (
-                <select className='form-select form-select-lg' aria-label=".form-select-lg example">
+
+            {documentTypes.length > 0 ? (
+                <select
+                    className="form-select form-select-lg"
+                    value={documentType}
+                    onChange={(e) => setDocumentType(e.target.value)}
+                    aria-label="Select document type"
+                >
                     <option value="">All</option>
                     {documentTypes.map((type) => (
-                        <option key={type.id} value={type.id}>{type.name}</option>
+                        <option key={type.id} value={type.name}>
+                            {type.name}
+                        </option>
                     ))}
                 </select>
             ) : (
                 <p>Loading options...</p>
-            )
-            }
-
-        </div >
+            )}
+        </div>
     );
 };
 
 export default SearchBar;
-

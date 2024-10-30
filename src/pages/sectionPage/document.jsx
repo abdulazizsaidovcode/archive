@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
-import { apirl } from "../../helpers/urls";
 import { useFetch } from "../../hooks/fetchData";
-import DocumentFileContents from "./documentFile";
 
 const FileContents = ({ file, clear, setSelectedDocument}) => {
     const { data } = useFetch('')
-
 
     return (
         <div>
@@ -22,9 +18,9 @@ const FileContents = ({ file, clear, setSelectedDocument}) => {
                             <p className="mb-0">{child.title}</p>
                             <p className="mb-0">{child.created_at}</p>
                             <p className="mb-0">{child.permission}</p>
-                            <a target="blank" href={`${apirl + child.file}`} className="d-flex " style={{ width: 20 }}>
+                            {/* <a target="blank" href={child.file && new URL(child.file)} className="d-flex " style={{ width: 20 }}>
                                 <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                            </a>
+                            </a> */}
                         </li>
                     ))}
                 </ul>

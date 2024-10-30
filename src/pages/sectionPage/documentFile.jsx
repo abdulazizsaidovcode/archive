@@ -1,5 +1,8 @@
+import { handleDownloadFolder } from "../../components/zip";
 import { apirl, document_file_url } from "../../helpers/urls";
 import { useFetch } from "../../hooks/fetchData";
+import { getFileName } from "../../hooks/truncateText";
+import '../../styles/filePopUp.css'
 
 const DocumentFileContents = ({ file, openModal }) => {
     const { data, loading } = useFetch(document_file_url)
@@ -16,9 +19,9 @@ const DocumentFileContents = ({ file, openModal }) => {
                     <p className="mb-0">{file.title}</p>
                     <p className="mb-0">{file.created_at}</p>
                     <p className="mb-0">{file.permission}</p>
-                    <a target="blank" href={`${apirl + file.file}`} className="d-flex " style={{ width: 20 }}>
+                    <p onClick={() => handleDownloadFolder(file.files)} className="d-flex mb-0" style={{ width: 20 }}>
                         <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                    </a>
+                    </p>
                 </li>
             </ul>
             <div className="row">
@@ -27,16 +30,21 @@ const DocumentFileContents = ({ file, openModal }) => {
                         data.results
                             .filter((child) => child.document === file.id)
                             .map((child) => (
-                                <div className="col-md-3 mt-4" key={child.id}>
+                                <a href={new URL(child.file)} target="blank" className="col-md-3 mt-4" key={child.id}>
                                     <div className="card shadow-sm h-100">
                                         <div className="card-body d-flex flex-column justify-content-center align-items-center">
                                             <div className="section-icon mb-3">
-                                                <i className="fa fa-folder-open fa-2x"></i>
+                                                <i class="fa-regular fa-file-lines fa-2x"></i>
                                             </div>
-                                            <h5 className="card-title text-center">{child.name}</h5>
+                                            <div className="file-container">
+                                                <p className="file-name">
+                                                    <p className="text-center">{getFileName(child.file)}</p>
+                                                    <span className="tooltipp">{decodeURIComponent(child.file.split('/').pop())}</span>
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             ))
                     ) : (
                         <p>Bu fayl identifikatori uchun hech qanday hujjat topilmadi...</p>
