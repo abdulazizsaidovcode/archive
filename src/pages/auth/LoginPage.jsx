@@ -1,15 +1,12 @@
-// src/components/LoginPage.jsx
 import React, { useState } from 'react';
-import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-// import './core.css';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate(); // Navigate funksiyasi
+    const navigate = useNavigate();
 
 
     const handleLogin = async (e) => {
@@ -51,13 +48,13 @@ const LoginPage = () => {
             <div className="authentication-wrapper authentication-basic container-p-y">
                 <div className="authentication-inner">
                     <div className="">
-                        <div className="card-body">
+                        <div className="card-body justify-content-start">
                             <h4 className="mb-2">Welcome back👋</h4>
                             <p className="mb-4">Please sign-in to your account and start the adventure</p>
                             {error && <div className="alert alert-danger">{error}</div>}
                             <form onSubmit={handleLogin}>
-                                <div className="mb-3">
-                                    <label htmlFor="email" className="form-label">Email or Username</label>
+                                <div className="mb-3 d-flex flex-column align-items-start"> 
+                                    <label htmlFor="email" className="form-labe text-al">Email or Username</label>
                                     <input
                                         type="phone"
                                         className="form-control"
@@ -69,7 +66,7 @@ const LoginPage = () => {
                                         autoFocus
                                     />
                                 </div>
-                                <div className="mb-3">
+                                <div className="mb-3 d-flex flex-column align-items-start">
                                     <label htmlFor="password" className="form-label">Password</label>
                                     <input
                                         type="password"

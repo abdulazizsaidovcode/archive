@@ -1,6 +1,6 @@
 import { handleDownloadFolder } from "../../components/zip";
 
-const FolderContents = ({ folder, onFolderSelect }) => {
+const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal,setSelecteditem }) => {
   return (
     <div>
       {folder.children && folder.children.length > 0 ? (
@@ -18,8 +18,13 @@ const FolderContents = ({ folder, onFolderSelect }) => {
               <p> </p>
               <p> </p>
               <p> </p>
-              <span className="d-flex " style={{ width: 20 }} onClick={() => handleDownloadFolder(folder)}>
-                <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
+              <span className="d-flex " style={{ width: 100 }} >
+                <i onClick={() => handleDownloadFolder(folder)} style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
+                <i style={{ fontSize: 20 }} class="fa-solid fa-pen-to-square text-warning ml-3"></i>
+                <i onClick={() => {
+                  setSelecteditem(child);
+                  setShowDeleteModal()
+                }} style={{ fontSize: 20 }} class="fa-solid fa-trash text-danger ml-3"></i>
               </span>
             </li>
           ))}

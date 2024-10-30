@@ -5,3 +5,4 @@ export const document_file_url = apirl + 'v1/document_file/'
 export const document_url = apirl + '/v1/documents/'
 
 export const document_type_url = apirl + 'v1/document_type/'
+export const folder_Url = apirl + 'v1/folder/'

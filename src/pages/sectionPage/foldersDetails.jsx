@@ -4,21 +4,26 @@ import AddFolderModal from '../../components/modals/addFolderModal';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import UploadFileModal from '../../components/modals/fileuploadmodal';
-import { apirl, document_file_url, document_type_url, document_url } from '../../helpers/urls';
+import { apirl, document_file_url, document_type_url, document_url, folder_Url } from '../../helpers/urls';
 import FileContents from './document';
 import { toast } from 'react-toastify';
 import FolderDetailSidebar from '../../components/sitebar/folderDetailSitebar';
 import AddDocumentModal from '../../components/modals/addDocumentModal';
-import { useFetch } from '../../hooks/fetchData';
+import { DeleteData, useFetch } from '../../hooks/fetchData';
 import DocumentFileContents from './documentFile';
 import Pagination from '../../components/pagenation';
+import { DeletModal } from '../../components/modals/deleteModal';
+import { config } from '../../helpers/token';
 
 function Addsections() {
-    const [selectedFolder, setSelectedFolder] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [showFileModal, setShowFileModal] = useState(false);
-    const [selectedDocument, setSelectedDocument] = useState('');
     const [showDocumentModal, setShowDocumentModal] = useState(false);
+    const [showFileModal, setShowFileModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const [selectedItem, setSelecteditem] = useState('')
+    const [selectedFolder, setSelectedFolder] = useState(null);
+    const [selectedDocument, setSelectedDocument] = useState('');
     const [datas, setDatas] = useState([]);
     const [expandedFolders, setExpandedFolders] = useState([]); // Ochilgan papkalarni saqlash uchun holat
     const [mainFolder, setmainFolder] = useState(false);
@@ -43,13 +48,8 @@ function Addsections() {
 
     // Bo'limlarni olish funksiyasi
     const fetchSections = async () => {
-        const token = localStorage.getItem('access_token');
         try {
-            const response = await axios.get(apirl + `/v1/folder/?page=${currentPage}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await axios.get(apirl + `/v1/folder/?page=${currentPage}`, config);
 
             if (folderId !== 'All') {
                 let sortedFolder = response.data.results.filter((item) => item.id == folderId);
@@ -228,10 +228,10 @@ function Addsections() {
             toast.error('Faylni yuklashda xato yuz berdi:', error);
         }
     };
-
-
-
-    console.log(selectedFolder);
+    const deleleteDocument = () => {
+        DeleteData(folder_Url, selectedItem.id)
+        console.log(selectedItem);
+    }
 
     return (
         <div className="container-fluid">
@@ -242,8 +242,8 @@ function Addsections() {
                         folders={datas}
                         onFolderSelect={handleFolderSelect}
                         selectedFolder={selectedFolder}
-                        onToggleExpand={toggleFolderExpand} // Ochish yoki yopish
-                        isExpanded={isFolderExpanded} // Papka ochiq yoki yopiqligini tekshirish
+                        onToggleExpand={toggleFolderExpand}
+                        isExpanded={isFolderExpanded}
                     />
                     {folderId == 'All' && <Pagination
                         currentPage={currentPage}
@@ -273,7 +273,7 @@ function Addsections() {
                         </div>
                     </div>
                     {selectedFolder && (!selectedFolder.documents.length || selectedFolder) ? (
-                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} />
+                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} setShowDeleteModal={() => { setShowDeleteModal(true) }} setSelecteditem={setSelecteditem} />
                     ) : (
                         !selectedDocument && <p>Avval biron bir folderni tanlang !</p>
                     )}
@@ -301,6 +301,11 @@ function Addsections() {
                 handleClose={() => setShowModal(false)}
                 onSave={handleAddFolder}
                 setmainFolder={setmainFolder}
+            />
+            <DeletModal
+                show={showDeleteModal}
+                handleClose={() => setShowDeleteModal(false)}
+                onSave={deleleteDocument}
             />
         </div>
     );

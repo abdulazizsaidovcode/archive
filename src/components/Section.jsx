@@ -10,8 +10,6 @@ const SectionsPage = () => {
         fetchSections();
     }, []);
 
-    console.log('salom');
-    
     // Bo'limlarni olish (APIdan irarxik tarzda)
     const fetchSections = async () => {
         try {

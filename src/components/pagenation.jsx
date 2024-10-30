@@ -7,8 +7,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return (
     <div className="pagination-container">
-      
-
       {/* Pagination controls */}
       <div className="pagination-controls">
         <button

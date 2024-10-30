@@ -1,7 +1,5 @@
 // src/components/DocumentList.jsx
 import React from 'react';
-import './DocumentList.css';  // Hujjatlar ro'yxati uchun styling
-import './table.css';  // Jadval stylingi
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

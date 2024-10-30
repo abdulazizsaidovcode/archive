@@ -1,7 +1,14 @@
 @import url('./styles/bg-colors.css');
+@import url('./styles/Navbar.css');
+@import url('./styles/table.css');
+@import url('./styles/SearchBar.css');
+@import url('./styles/DocumentList.css');
+@import url('./styles/Login.css');
 @import url('./styles/filePopUp.css');
 @import url('./styles/text-colors.css');
 @import url('./styles/pagenation.css');
+@import url('./styles/modals.css');
+
 @import url('./lib/bootstrap/bootstrap.min.css');
 
 

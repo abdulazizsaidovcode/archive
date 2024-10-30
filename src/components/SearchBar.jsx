@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
-import './SearchBar.css';
 import { debounce } from 'lodash';
 import { DocumentContext } from '../context/documents';
 import axios from 'axios';
