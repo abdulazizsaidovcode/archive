@@ -1,7 +1,6 @@
-const token = localStorage.getItem('access_token');
 
 export const config = {
     headers: {
-        'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
     }
 }

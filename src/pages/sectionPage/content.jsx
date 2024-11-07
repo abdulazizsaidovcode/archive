@@ -1,6 +1,6 @@
 import { handleDownloadFolder } from "../../components/zip";
 
-const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal,setSelecteditem }) => {
+const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal, setSelecteditem, setShowEditFolderModal }) => {
   return (
     <div>
       {folder.children && folder.children.length > 0 ? (
@@ -20,7 +20,11 @@ const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal,setSelected
               <p> </p>
               <span className="d-flex " style={{ width: 100 }} >
                 <i onClick={() => handleDownloadFolder(folder)} style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                <i style={{ fontSize: 20 }} class="fa-solid fa-pen-to-square text-warning ml-3"></i>
+                <i onClick={() => {
+                  setSelecteditem(child)
+                  setShowEditFolderModal()
+                }}
+                  style={{ fontSize: 20 }} class="fa-solid fa-pen-to-square text-warning ml-3"></i>
                 <i onClick={() => {
                   setSelecteditem(child);
                   setShowDeleteModal()

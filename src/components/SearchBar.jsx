@@ -4,7 +4,7 @@ import { DocumentContext } from '../context/documents';
 import axios from 'axios';
 
 const SearchBar = () => {
-    const { setDocuments, documentTypes } = useContext(DocumentContext); 
+    const { setDocuments, documentTypes } = useContext(DocumentContext);
     const [localSearchName, setLocalSearchName] = useState('');
     const [localSearchNumber, setLocalSearchNumber] = useState('');
     const [localCreatedDate, setLocalCreatedDate] = useState('');
@@ -33,7 +33,7 @@ const SearchBar = () => {
 
     useEffect(() => {
         debouncedFetchDocuments();
-        return () => debouncedFetchDocuments.cancel(); 
+        return () => debouncedFetchDocuments.cancel();
     }, [localSearchName, localSearchNumber, localCreatedDate, documentType]);
 
     return (
@@ -78,6 +78,18 @@ const SearchBar = () => {
             ) : (
                 <p>Loading options...</p>
             )}
+            <select
+                className="form-select form-select-lg"
+                value={documentType}
+                onChange={(e) => setDocumentType(e.target.value)}
+                aria-label="Select document type"
+            >
+                <option value="">All</option>
+                <option value="DEPARTMENT">Departmant</option>
+                <option value="PUBLIC">Public</option>
+                <option value="PRIVETE">Privete</option>
+                
+            </select>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { config } from "../helpers/token";
 import { toast } from "react-toastify";
+import { config } from "../helpers/token";
 
 export const useFetch = (url) => {
     const [data, setData] = useState('')
@@ -36,3 +36,21 @@ export const DeleteData = (url, id) => {
             toast.error('Failed to delete ')
         })
 }
+
+
+export const PutData = (url, data, id) => {
+    const config = {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Content-Type': 'application/json'
+        }
+    };
+
+    axios.put(`${url}${id}`, data, config)
+        .then(() => {
+            toast.success('successfully edited');
+        }).catch((error) => {
+            console.error('Error on editing:', error);
+            toast.error('Failed to edit');
+        });
+};

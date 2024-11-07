@@ -9,17 +9,21 @@ import FileContents from './document';
 import { toast } from 'react-toastify';
 import FolderDetailSidebar from '../../components/sitebar/folderDetailSitebar';
 import AddDocumentModal from '../../components/modals/addDocumentModal';
-import { DeleteData, useFetch } from '../../hooks/fetchData';
+import { DeleteData, PutData, useFetch } from '../../hooks/fetchData';
 import DocumentFileContents from './documentFile';
 import Pagination from '../../components/pagenation';
 import { DeletModal } from '../../components/modals/deleteModal';
 import { config } from '../../helpers/token';
+import axiosInstance from '../../helpers/axiosInstance';
+import EditFolderModal from '../../components/modals/editFolderModal';
 
 function Addsections() {
     const [showModal, setShowModal] = useState(false);
     const [showDocumentModal, setShowDocumentModal] = useState(false);
     const [showFileModal, setShowFileModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showEditFolderModal, setShowEditFolderModal] = useState(false);
+    
 
     const [selectedItem, setSelecteditem] = useState('')
     const [selectedFolder, setSelectedFolder] = useState(null);
@@ -49,7 +53,7 @@ function Addsections() {
     // Bo'limlarni olish funksiyasi
     const fetchSections = async () => {
         try {
-            const response = await axios.get(apirl + `/v1/folder/?page=${currentPage}`, config);
+            const response = await axios.get(apirl + `v1/folder/?page=${currentPage}`, config);
 
             if (folderId !== 'All') {
                 let sortedFolder = response.data.results.filter((item) => item.id == folderId);
@@ -228,10 +232,22 @@ function Addsections() {
             toast.error('Faylni yuklashda xato yuz berdi:', error);
         }
     };
-    const deleleteDocument = () => {
+    const deleteFolder = () => {
         DeleteData(folder_Url, selectedItem.id)
         console.log(selectedItem);
     }
+    const putFolderDocument = () => {
+        const newFolder = {
+            name: selectedItem.name,
+            parent: mainFolder ? null : selectedItem.id,
+        };
+
+        console.log('nimadir:', newFolder);
+
+        PutData(folder_Url, newFolder, selectedItem.id);
+    };
+
+
 
     return (
         <div className="container-fluid">
@@ -273,17 +289,18 @@ function Addsections() {
                         </div>
                     </div>
                     {selectedFolder && (!selectedFolder.documents.length || selectedFolder) ? (
-                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} setShowDeleteModal={() => { setShowDeleteModal(true) }} setSelecteditem={setSelecteditem} />
+                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} setShowDeleteModal={() => { setShowDeleteModal(true) }} setSelecteditem={setSelecteditem} setShowEditFolderModal={() => { setShowEditFolderModal(true) }} />
                     ) : (
                         !selectedDocument && <p>Avval biron bir folderni tanlang !</p>
                     )}
                     {!selectedDocument && selectedFolder && selectedFolder.documents && <FileContents file={selectedFolder} clear={''} setSelectedDocument={setSelectedDocument} />}
                     {selectedDocument && < DocumentFileContents file={selectedDocument} openModal={() => setShowFileModal(true)} />}
-
                     {!selectedFolder?.children && !selectedFolder?.documents?.length && <p>file yoki folder topilmadi !</p>}
 
                 </div>
             </div>
+
+            {/* --------- modals ---------- */}
             <AddDocumentModal
                 show={showDocumentModal}
                 handleClose={() => setShowDocumentModal(false)}
@@ -302,10 +319,17 @@ function Addsections() {
                 onSave={handleAddFolder}
                 setmainFolder={setmainFolder}
             />
+            <EditFolderModal
+                show={showEditFolderModal}
+                currentFolder={selectedFolder}
+                handleClose={() => setShowEditFolderModal(false)}
+                onSave={putFolderDocument}
+                setmainFolder={setmainFolder}
+            />
             <DeletModal
                 show={showDeleteModal}
                 handleClose={() => setShowDeleteModal(false)}
-                onSave={deleleteDocument}
+                onSave={deleteFolder}
             />
         </div>
     );
