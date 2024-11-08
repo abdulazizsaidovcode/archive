@@ -23,7 +23,7 @@ function Addsections() {
     const [showFileModal, setShowFileModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showEditFolderModal, setShowEditFolderModal] = useState(false);
-    
+
 
     const [selectedItem, setSelecteditem] = useState('')
     const [selectedFolder, setSelectedFolder] = useState(null);
@@ -39,37 +39,168 @@ function Addsections() {
 
     const { data: docimentType } = useFetch(document_type_url)
 
-
-    // Papka tanlanganda
-    const handleFolderSelect = (folder) => {
-        setSelectedFolder(folder);
-        setSelectedDocument('')
-    };
-
     useEffect(() => {
         fetchSections();
     }, [folderId, currentPage, pageSize]);
 
-    // Bo'limlarni olish funksiyasi
+
+    // folder va documentni kuzatadi 
+    useEffect(() => {
+        // Recursive function to find a folder or document by id in a nested structure
+        const findInTree = (folders, id) => {
+            for (let folder of folders) {
+                // Check if we found the folder
+                if (folder.id === id) {
+                    return { folder };  // Return the folder if found
+                }
+
+                // If it's not the folder, check documents inside this folder
+                if (folder.documents) {
+                    const foundDocument = folder.documents.find(doc => doc.id === id);
+                    if (foundDocument) {
+                        return { folder, document: foundDocument };  // Return both the folder and the document
+                    }
+                }
+
+                // If the folder has children, recurse into the children
+                if (folder.children) {
+                    const foundInChildren = findInTree(folder.children, id);
+                    if (foundInChildren) {
+                        return foundInChildren;  // Return found folder/document from children
+                    }
+                }
+            }
+            return null;  // Return null if nothing is found
+        };
+
+        // Check if data has changed and folderId is valid
+        if (datas.length > 0 && selectedFolder && selectedFolder.id) {
+            const found = findInTree(datas, parseInt(selectedFolder.id));
+
+            if (found) {
+                // If we found the folder, update selectedFolder state
+                setSelectedFolder(found.folder);
+                
+                // If we also found a document, update selectedDocument state
+                if (selectedDocument && found.folder.documents) {
+                    setSelectedDocument(found.folder.documents.find(doc => doc.id === selectedDocument.id));  // Update selectedDocument state
+                }
+            }
+        }
+
+    }, [datas, folderId, selectedFolder?.id]);
+
+    // Function to update the cache with new folder or document data
+    // const updateCache = (existingData, newData) => {
+    //     const findById = (data, itemId) => {
+    //         for (let item of data) {
+    //             if (item.id === itemId) {
+    //                 return item;
+    //             }
+    //             if (item.children) {
+    //                 let found = findById(item.children, itemId);
+    //                 if (found) return found;
+    //             }
+    //             if (item.documents) {
+    //                 let found = findById(item.documents, itemId);
+    //                 if (found) return found;
+    //             }
+    //         }
+    //         return null;
+    //     };
+
+    //     const addNewFilesAndFolders = (existingData, incomingData) => {
+    //         for (let newItem of incomingData) {
+    //             let existingItem = findById(existingData, newItem.id);
+
+    //             if (!existingItem) {
+    //                 if (newItem.children) {
+    //                     newItem.children = addNewFilesAndFolders(existingData, newItem.children);
+    //                 }
+    //                 existingData.push(newItem);
+    //             } else {
+    //                 if (newItem.documents) {
+    //                     for (let newDoc of newItem.documents) {
+    //                         let existingDoc = findById(existingItem.documents || [], newDoc.id);
+    //                         if (!existingDoc) {
+    //                             existingItem.documents = existingItem.documents || [];
+    //                             existingItem.documents.push(newDoc);
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         return existingData;
+    //     };
+
+    //     return addNewFilesAndFolders(existingData, newData.results);
+    // };
+
     const fetchSections = async () => {
         try {
             const response = await axios.get(apirl + `v1/folder/?page=${currentPage}`, config);
+            const newData = response.data;
 
-            if (folderId !== 'All') {
-                let sortedFolder = response.data.results.filter((item) => item.id == folderId);
-                setSelectedFolder(sortedFolder[folderId]);
-                setDatas(sortedFolder);
+            setTotalPages(Math.ceil(newData.count / pageSize));
+            setDatas(newData.results);
 
-            } else {
-                setTotalPages(Math.ceil(response.data.count / pageSize));
-                setDatas(response.data.results);
+            // If folderId is provided, find the selected folder within the new data
+            if (folderId && folderId !== 'All') {
+                const foundFolder = newData.results.find(folder => folder.id === folderId);
+                if (foundFolder) {
+                    setSelectedFolder(foundFolder);
+                }
             }
         } catch (error) {
             console.error('Error fetching sections:', error);
         }
     };
 
-    // Ota papkani topish funksiyasi
+    // If datas changes, update selectedFolder if it exists in the new data
+    // useEffect(() => {
+    //     if (datas.length > 0 && folderId && folderId !== 'All') {
+    //         const foundFolder = datas.find(folder => folder.id === folderId);
+    //         if (foundFolder && selectedFolder?.id !== foundFolder.id) {
+    //             setSelectedFolder(foundFolder);
+    //         }
+    //     }
+    // }, [datas, folderId]);
+
+    const handleAddFolder = async (folderName) => {
+        try {
+            const token = localStorage.getItem('access_token');
+            const newFolder = {
+                name: folderName,
+                parent: selectedFolder ? selectedFolder.id : null,
+            };
+
+            const response = await axios.post(apirl + '/v1/folder/', newFolder, {
+                headers: { 'Authorization': `Bearer ${token}` },
+            });
+
+            // const createdFolder = response.data;
+            // const updatedFolders = updateCache(datas, { results: [createdFolder] });
+
+            // setDatas(updatedFolders);
+            fetchSections(); // Refresh data from server
+            setShowModal(false);
+        } catch (error) {
+            toast.error('Error creating folder');
+        }
+    };
+
+    // Handle back navigation function
+    const handleBack = () => {
+        if (selectedFolder) {
+            const parentFolder = findParentFolder(datas, selectedFolder.id);
+            if (parentFolder) {
+                setSelectedFolder(parentFolder);
+            }
+        }
+    };
+
+    // Function to find the parent folder of the selected folder
     const findParentFolder = (folders, folderId) => {
         for (const folder of folders) {
             if (folder.children && folder.children.some(child => child.id === folderId)) {
@@ -81,6 +212,25 @@ function Addsections() {
             }
         }
         return null;
+    };
+
+    // Function to update the cache with new folder or document data
+
+    const handleFolderSelect = (folder) => {
+        setSelectedFolder(folder);
+        setSelectedDocument('');
+    };
+
+
+    // Folder Expansion toggler
+    const toggleFolderExpand = (folderId) => {
+        setExpandedFolders((prev) =>
+            prev.includes(folderId) ? prev.filter(id => id !== folderId) : [...prev, folderId]
+        );
+    };
+
+    const isFolderExpanded = (folderId) => {
+        return expandedFolders.includes(folderId);
     };
 
     // Navigatsiya yo'lini yaxshilash
@@ -96,88 +246,6 @@ function Addsections() {
         };
         findPath(folder);  // Tanlangan papkadan boshlaymiz
         return breadcrumb.join(' / ');  // Qator qilib chiqarish
-    };
-
-
-    // Orqaga qaytish funksiyasi
-    const handleBack = () => {
-        if (selectedDocument) {
-            setSelectedDocument('')
-        } else {
-            if (selectedFolder) {
-                const parentFolder = findParentFolder(datas, selectedFolder.id);  // Tanlangan papka ota papkasini topamiz
-                if (parentFolder) {
-                    setSelectedFolder(parentFolder);  // Tanlangan papkani ota papkaga o'zgartiramiz
-                } else {
-                    console.log('Parent folder topilmadi');
-                }
-            }
-            setSelectedDocument('')
-        }
-    };
-
-    // Papkalarni expand qilish yoki yopish funksiyasi
-    const toggleFolderExpand = (folderId) => {
-        setExpandedFolders((prev) =>
-            prev.includes(folderId) ? prev.filter(id => id !== folderId) : [...prev, folderId]
-        );
-    };
-
-    // Papkalar ochiq yoki yopiq ekanligini tekshirish
-    const isFolderExpanded = (folderId) => {
-        return expandedFolders.includes(folderId);
-    };
-
-    // Yangi papka qo'shish funksiyasi
-    const handleAddFolder = async (folderName) => {
-        try {
-            const token = localStorage.getItem('access_token');
-            console.log(selectedFolder, 1234);
-            if (selectedFolder == null) {
-                toast.warning('you need select folder or you need mark create main folder ')
-            }
-
-            const newFolder = {
-                name: folderName,
-                parent: mainFolder ? null : selectedFolder.id,
-            };
-
-            const response = await axios.post(apirl + '/v1/folder/', newFolder, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const createdFolder = response.data;
-
-            const updateFolders = (folders, folderId) => {
-                return folders.map((folder) => {
-                    if (folder.id === folderId) {
-                        return {
-                            ...folder,
-                            children: [...(folder.children || []), createdFolder], // Yangi papkani bolalariga qo'shish
-                        };
-                    } else if (folder.children && folder.children.length > 0) {
-                        return {
-                            ...folder,
-                            children: updateFolders(folder.children, folderId), // Rekursiv qo'shish
-                        };
-                    }
-                    return folder;
-                });
-            };
-            const updatedDatas = updateFolders(datas, selectedFolder.id);
-            setDatas(updatedDatas);  // Datas holatini yangilash
-            setShowModal(false);
-            fetchSections()
-            setSelectedFolder(createdFolder);  // Tanlangan papkani yangi papka bilan o'zgartirish
-            setExpandedFolders((prev) => [...prev, selectedFolder.id]); // Yangi papka qo'shilganda hozirgi ochiq holatni saqlab qolish
-
-
-
-        } catch (error) {
-            console.error('Error adding folder:', error);
-        }
     };
 
     const handleFileUpload = async (selectedFile) => {
@@ -198,10 +266,12 @@ function Addsections() {
 
             toast.success('Fayl yuklandi:', response.data);
             setShowFileModal(false);
+            fetchSections();
         } catch (error) {
             toast.error('Faylni yuklashda xato yuz berdi:', error);
         }
     };
+
     const handleDocumentUpload = async (selectedFile) => {
         try {
             const token = localStorage.getItem('access_token');
@@ -226,8 +296,7 @@ function Addsections() {
 
             toast.success('Fayl yuklandi: ');
             setShowFileModal(false);
-            console.log(response);
-
+            fetchSections();
         } catch (error) {
             toast.error('Faylni yuklashda xato yuz berdi:', error);
         }
@@ -236,6 +305,7 @@ function Addsections() {
         DeleteData(folder_Url, selectedItem.id)
         console.log(selectedItem);
     }
+
     const putFolderDocument = () => {
         const newFolder = {
             name: selectedItem.name,
@@ -246,8 +316,6 @@ function Addsections() {
 
         PutData(folder_Url, newFolder, selectedItem.id);
     };
-
-
 
     return (
         <div className="container-fluid">

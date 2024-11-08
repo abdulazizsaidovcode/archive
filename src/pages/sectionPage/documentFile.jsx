@@ -7,8 +7,6 @@ import '../../styles/filePopUp.css'
 const DocumentFileContents = ({ file, openModal }) => {
     const { data, loading } = useFetch(document_file_url)
     if (loading) return 'Document is loading ...'
-    console.log(file);
-
     return (
         <div className="">
             <ul className="list-group">

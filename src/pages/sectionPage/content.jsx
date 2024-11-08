@@ -1,6 +1,7 @@
 import { handleDownloadFolder } from "../../components/zip";
 
 const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal, setSelecteditem, setShowEditFolderModal }) => {
+  
   return (
     <div>
       {folder.children && folder.children.length > 0 ? (
