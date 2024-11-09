@@ -49,7 +49,7 @@ const DocumentList = ({ documents = [] }) => {
                         </div>
                     ))} */}
                     <tbody className="table-border-bottom-0">
-                        {documents && documents.length && documents.filter((doc) => doc.permission == 'PUBLIC').map(document => (
+                        {documents && documents.length && documents.map(document => (
                             <tr onClick={() => handleDocumentClick(document.id)} key={document.id}>
                                 <td><strong>{document.document_number}</strong></td>
                                 <td>{document.title}</td>

@@ -15,7 +15,7 @@ function DocumentArchive() {
     return (
         <div className='container mt-4'>
             <h1>Document Archive</h1>
-            <SearchBar />
+            <SearchBar page={currentPage} />
             <DocumentList documents={documents} />
             <div className='py-4'>
                 <Pagination

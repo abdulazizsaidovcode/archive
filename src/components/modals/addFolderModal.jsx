@@ -48,7 +48,7 @@ const AddFolderModal = ({ show, handleClose, currentFolder, onSave, setmainFolde
                 <div class="form-check">
                   <input onChange={(e) => changeMain(e)} class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
                   <label class="form-check-label" for="defaultCheck1">
-                    main folder sifatida belgilash
+                    {mainFolders ? 'main folder sifatida yaratmoqdasiz' : 'main folder sifatida belgilash'}
                   </label>
                 </div>
               </div>
@@ -57,7 +57,7 @@ const AddFolderModal = ({ show, handleClose, currentFolder, onSave, setmainFolde
                   <i class="fa-solid fa-folder fa-2x mr-1"></i>
                   <i class="fa-solid fa-arrow-left fa-1x mr-3 text-success"></i>
                   <div className='d-flex align-items-end'>
-                    <p className=" mb-0">{currentFolder ? currentFolder.name : 'folder - tanleng'} </p>
+                    <p className=" mb-0">{currentFolder ? currentFolder.name : 'folder - tanleng !'} </p>
                     {currentFolder && <p className='mb-0 ml-2'>folderi ichiga yaratmoqdasiz !</p>}
                   </div>
                 </div>

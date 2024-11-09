@@ -1,7 +1,9 @@
+import { useModals } from "../../context/modalcontext";
 import { useFetch } from "../../hooks/fetchData";
 
-const FileContents = ({ file, clear, setSelectedDocument}) => {
+const FileContents = ({ file, clear, setSelectedDocument, setSelecteditem }) => {
     const { data } = useFetch('')
+    const { openModal } = useModals();
 
     return (
         <div>
@@ -9,18 +11,54 @@ const FileContents = ({ file, clear, setSelectedDocument}) => {
                 <ul className="list-group">
                     {file.documents.map((child) => (
                         <li
-                            onClick={() => setSelectedDocument(child)}
                             key={child.id}
                             className="list-group-item d-flex justify-content-between align-items-center"
                             style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
                         >
                             <i class="fa-solid fa-file fa-1x"></i>
-                            <p className="mb-0">{child.title}</p>
+                            <p className="mb-0 hover-underline" onClick={() => setSelectedDocument(child)}>{child.title}</p>
+
                             <p className="mb-0">{child.created_at}</p>
                             <p className="mb-0">{child.permission}</p>
-                            {/* <a target="blank" href={child.file && new URL(child.file)} className="d-flex " style={{ width: 20 }}>
-                                <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                            </a> */}
+                            <span className="d-flex" style={{ width: 100 }}>
+                                {/* Dropdown Trigger (Three Dots Icon) */}
+                                <div className="dropdown">
+                                    <button
+                                        className="btn btn-link d-flex align-items-centermb-0 "
+                                        type="button"
+                                        id="dropdownMenuButton"
+                                        data-bs-toggle="dropdown"
+                                        style={{ textDecoration: 'none' }}
+                                        aria-expanded="false">
+                                        {/* 3 Dots Icon */}
+                                        <i class="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
+                                    </button>
+
+                                    {/* Dropdown Menu */}
+                                    <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                        {/* Edit option */}
+                                        <li>
+                                            <a className="dropdown-item" href="#" onClick={() => {
+                                                setSelecteditem(child);
+                                                openModal('showDocumentModal')
+                                            }}>
+                                                <i className="fa-solid fa-pen-to-square text-warning" style={{ fontSize: 20 }}></i> Edit
+                                            </a>
+                                        </li>
+
+                                        {/* Delete option */}
+                                        <li>
+                                            <a className="dropdown-item" href="#" onClick={() => {
+                                                setSelecteditem(child);
+                                                openModal('showDeleteModal')
+                                            }}>
+                                                <i className="fa-solid fa-trash text-danger" style={{ fontSize: 20 }}></i> Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </span>
                         </li>
                     ))}
                 </ul>

@@ -1,7 +1,9 @@
 import { handleDownloadFolder } from "../../components/zip";
+import { useModals } from "../../context/modalcontext";
 
-const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal, setSelecteditem, setShowEditFolderModal }) => {
-  
+const FolderContents = ({ folder, onFolderSelect, setSelecteditem, setMoveFolder }) => {
+  const { openModal} = useModals();
+
   return (
     <div>
       {folder.children && folder.children.length > 0 ? (
@@ -13,23 +15,56 @@ const FolderContents = ({ folder, onFolderSelect, setShowDeleteModal, setSelecte
               style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
             >
               <i class="fa-solid fa-folder fa-1x"></i>
-              <p className="hover-underline" style={{ marginBottom: 0 }} onClick={() => onFolderSelect(child)}>{child.name} </p>
+              <p className="hover-underline " style={{ marginBottom: 0 }} onClick={() => onFolderSelect(child)}>{child.name} </p>
               <p> </p>
               <p> </p>
               <p> </p>
               <p> </p>
               <p> </p>
-              <span className="d-flex " style={{ width: 100 }} >
-                <i onClick={() => handleDownloadFolder(folder)} style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                <i onClick={() => {
-                  setSelecteditem(child)
-                  setShowEditFolderModal()
-                }}
-                  style={{ fontSize: 20 }} class="fa-solid fa-pen-to-square text-warning ml-3"></i>
-                <i onClick={() => {
-                  setSelecteditem(child);
-                  setShowDeleteModal()
-                }} style={{ fontSize: 20 }} class="fa-solid fa-trash text-danger ml-3"></i>
+              <span className="d-flex" style={{ width: 100 }}>
+                {/* Dropdown Trigger (Three Dots Icon) */}
+                <div className="dropdown">
+                  <button
+                    className="btn btn-link d-flex align-items-centermb-0 "
+                    type="button"
+                    id="dropdownMenuButton"
+                    data-bs-toggle="dropdown"
+                    style={{ textDecoration: 'none' }}
+                    aria-expanded="false">
+                    {/* 3 Dots Icon */}
+                    <i class="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    {/* Download option */}
+                    <li>
+                      <a className="dropdown-item" href="#" onClick={() => setMoveFolder(child)}>
+                        <i class="fa-solid fa-turn-up text-dark" style={{ fontSize: 20 }}></i> Move
+                      </a>
+                    </li>
+
+                    {/* Edit option */}
+                    <li>
+                      <a className="dropdown-item" href="#" onClick={() => {
+                        setSelecteditem(child);
+                        openModal('showEditFolderModal')
+                      }}>
+                        <i className="fa-solid fa-pen-to-square text-warning" style={{ fontSize: 20 }}></i> Edit
+                      </a>
+                    </li>
+
+                    {/* Delete option */}
+                    <li>
+                      <a className="dropdown-item" href="#" onClick={() => {
+                        setSelecteditem(child);
+                        openModal('showDeleteModal')
+                      }}>
+                        <i className="fa-solid fa-trash text-danger" style={{ fontSize: 20 }}></i> Delete
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </span>
             </li>
           ))}

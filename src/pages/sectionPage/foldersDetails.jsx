@@ -16,24 +16,29 @@ import { DeletModal } from '../../components/modals/deleteModal';
 import { config } from '../../helpers/token';
 import axiosInstance from '../../helpers/axiosInstance';
 import EditFolderModal from '../../components/modals/editFolderModal';
+import MoveFolder from '../../components/move/folder';
+import { useModals } from '../../context/modalcontext';
 
 function Addsections() {
-    const [showModal, setShowModal] = useState(false);
-    const [showDocumentModal, setShowDocumentModal] = useState(false);
-    const [showFileModal, setShowFileModal] = useState(false);
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [showEditFolderModal, setShowEditFolderModal] = useState(false);
+    const { openModal, closeModal, modals } = useModals();
+    // ----------- modals ----------- //
+    console.log(modals);
 
+    // seved data
+    const [datas, setDatas] = useState([]);
 
     const [selectedItem, setSelecteditem] = useState('')
+    const [moveFolder, setMoveFolder] = useState(null)
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [selectedDocument, setSelectedDocument] = useState('');
-    const [datas, setDatas] = useState([]);
-    const [expandedFolders, setExpandedFolders] = useState([]); // Ochilgan papkalarni saqlash uchun holat
+    const [expandedFolders, setExpandedFolders] = useState([]);
     const [mainFolder, setmainFolder] = useState(false);
+
+    // paginations 
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [totalPages, setTotalPages] = useState(1);
+
     const { folderId } = useParams();
     const navigate = useNavigate();
 
@@ -80,7 +85,7 @@ function Addsections() {
             if (found) {
                 // If we found the folder, update selectedFolder state
                 setSelectedFolder(found.folder);
-                
+
                 // If we also found a document, update selectedDocument state
                 if (selectedDocument && found.folder.documents) {
                     setSelectedDocument(found.folder.documents.find(doc => doc.id === selectedDocument.id));  // Update selectedDocument state
@@ -90,82 +95,26 @@ function Addsections() {
 
     }, [datas, folderId, selectedFolder?.id]);
 
-    // Function to update the cache with new folder or document data
-    // const updateCache = (existingData, newData) => {
-    //     const findById = (data, itemId) => {
-    //         for (let item of data) {
-    //             if (item.id === itemId) {
-    //                 return item;
-    //             }
-    //             if (item.children) {
-    //                 let found = findById(item.children, itemId);
-    //                 if (found) return found;
-    //             }
-    //             if (item.documents) {
-    //                 let found = findById(item.documents, itemId);
-    //                 if (found) return found;
-    //             }
-    //         }
-    //         return null;
-    //     };
-
-    //     const addNewFilesAndFolders = (existingData, incomingData) => {
-    //         for (let newItem of incomingData) {
-    //             let existingItem = findById(existingData, newItem.id);
-
-    //             if (!existingItem) {
-    //                 if (newItem.children) {
-    //                     newItem.children = addNewFilesAndFolders(existingData, newItem.children);
-    //                 }
-    //                 existingData.push(newItem);
-    //             } else {
-    //                 if (newItem.documents) {
-    //                     for (let newDoc of newItem.documents) {
-    //                         let existingDoc = findById(existingItem.documents || [], newDoc.id);
-    //                         if (!existingDoc) {
-    //                             existingItem.documents = existingItem.documents || [];
-    //                             existingItem.documents.push(newDoc);
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         return existingData;
-    //     };
-
-    //     return addNewFilesAndFolders(existingData, newData.results);
-    // };
-
     const fetchSections = async () => {
         try {
             const response = await axios.get(apirl + `v1/folder/?page=${currentPage}`, config);
             const newData = response.data;
 
             setTotalPages(Math.ceil(newData.count / pageSize));
-            setDatas(newData.results);
-
             // If folderId is provided, find the selected folder within the new data
             if (folderId && folderId !== 'All') {
-                const foundFolder = newData.results.find(folder => folder.id === folderId);
+                const foundFolder = newData.results.find(folder => folder.id == folderId);
                 if (foundFolder) {
                     setSelectedFolder(foundFolder);
+                    setDatas(newData.results);
                 }
+            } else {
+                setDatas(newData.results);
             }
         } catch (error) {
             console.error('Error fetching sections:', error);
         }
     };
-
-    // If datas changes, update selectedFolder if it exists in the new data
-    // useEffect(() => {
-    //     if (datas.length > 0 && folderId && folderId !== 'All') {
-    //         const foundFolder = datas.find(folder => folder.id === folderId);
-    //         if (foundFolder && selectedFolder?.id !== foundFolder.id) {
-    //             setSelectedFolder(foundFolder);
-    //         }
-    //     }
-    // }, [datas, folderId]);
 
     const handleAddFolder = async (folderName) => {
         try {
@@ -179,12 +128,9 @@ function Addsections() {
                 headers: { 'Authorization': `Bearer ${token}` },
             });
 
-            // const createdFolder = response.data;
-            // const updatedFolders = updateCache(datas, { results: [createdFolder] });
 
-            // setDatas(updatedFolders);
             fetchSections(); // Refresh data from server
-            setShowModal(false);
+            closeModal('showModal')
         } catch (error) {
             toast.error('Error creating folder');
         }
@@ -192,10 +138,14 @@ function Addsections() {
 
     // Handle back navigation function
     const handleBack = () => {
-        if (selectedFolder) {
-            const parentFolder = findParentFolder(datas, selectedFolder.id);
-            if (parentFolder) {
-                setSelectedFolder(parentFolder);
+        if (selectedDocument) {
+            setSelectedDocument('')
+        } else {
+            if (selectedFolder) {
+                const parentFolder = findParentFolder(datas, selectedFolder.id);
+                if (parentFolder) {
+                    setSelectedFolder(parentFolder);
+                }
             }
         }
     };
@@ -217,10 +167,19 @@ function Addsections() {
     // Function to update the cache with new folder or document data
 
     const handleFolderSelect = (folder) => {
-        setSelectedFolder(folder);
-        setSelectedDocument('');
-    };
-
+        if (selectedFolder) {
+            if (folder.id == selectedFolder.id) {
+                setSelectedFolder(null)
+            } else {
+                setSelectedFolder(folder);
+                setSelectedDocument('');
+            }
+        }
+        else {
+            setSelectedFolder(folder);
+            setSelectedDocument('');
+        }
+    }
 
     // Folder Expansion toggler
     const toggleFolderExpand = (folderId) => {
@@ -295,7 +254,7 @@ function Addsections() {
             });
 
             toast.success('Fayl yuklandi: ');
-            setShowFileModal(false);
+            closeModal('showFileModal');
             fetchSections();
         } catch (error) {
             toast.error('Faylni yuklashda xato yuz berdi:', error);
@@ -329,7 +288,7 @@ function Addsections() {
                         onToggleExpand={toggleFolderExpand}
                         isExpanded={isFolderExpanded}
                     />
-                    {folderId == 'All' && <Pagination
+                    {datas && < Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         pageSize={pageSize}
@@ -347,56 +306,72 @@ function Addsections() {
                                 <p className='mb-0 ml-2'> {selectedFolder ? buildBreadcrumb(selectedFolder, datas) : 'No folder selected'}</p>
                             </div>
                             <div>
-                                {!selectedDocument && selectedFolder && !selectedFolder.children && <button className="btn btn-sm btn-success mr-2" onClick={() => setShowDocumentModal(true)}>
+                                {!selectedDocument && selectedFolder && !selectedFolder.children && <button className="btn btn-sm btn-success mr-2" onClick={() => openModal('showDocumentModal')}>
                                     Add file <i className="fa-solid fa-plus text-white"></i>
                                 </button>}
-                                {((selectedFolder && !selectedFolder.documents.length) || (selectedFolder == null)) && <button className="btn btn-sm btn-success" onClick={() => setShowModal(true)}>
+                                {((selectedFolder && !selectedFolder.documents.length) || (selectedFolder == null)) && <button className="btn btn-sm btn-success" onClick={() => openModal('showModal')}>
                                     Add Folder <i className="fa-solid fa-plus text-white"></i>
                                 </button>}
                             </div>
                         </div>
                     </div>
+
+                    {/* vvvvvvvvvvvvvvvvvv move folder vvvvvvvvvvvvvvvvvv */}
+                    {moveFolder && <MoveFolder folder={moveFolder} parentFolder={selectedFolder} canselmoveFolder={() => setMoveFolder(null)} />}
+                    {/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */}
+
+                    {/* vvvvvvvvvv folder component vvvvvvvvvv */}
                     {selectedFolder && (!selectedFolder.documents.length || selectedFolder) ? (
-                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} setShowDeleteModal={() => { setShowDeleteModal(true) }} setSelecteditem={setSelecteditem} setShowEditFolderModal={() => { setShowEditFolderModal(true) }} />
+                        <FolderContents folder={selectedFolder} onFolderSelect={handleFolderSelect} setSelecteditem={setSelecteditem} setMoveFolder={setMoveFolder} />
                     ) : (
                         !selectedDocument && <p>Avval biron bir folderni tanlang !</p>
                     )}
-                    {!selectedDocument && selectedFolder && selectedFolder.documents && <FileContents file={selectedFolder} clear={''} setSelectedDocument={setSelectedDocument} />}
-                    {selectedDocument && < DocumentFileContents file={selectedDocument} openModal={() => setShowFileModal(true)} />}
+                    {/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */}
+
+                    {/* vvvvvvvvvv document component vvvvvvvvvv */}
+                    {!selectedDocument && selectedFolder && selectedFolder.documents && <FileContents file={selectedFolder} clear={''} setSelectedDocument={setSelectedDocument} setSelecteditem={setSelecteditem} />}
+                    {/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */}
+
+                    {/* vvvvvvvvvv file component vvvvvvvvvv */}
+                    {selectedDocument && < DocumentFileContents file={selectedDocument} />}
+                    {/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */}
+
+                    {/* vvvvvvvvvv check folder is selected vvvvvv */}
                     {!selectedFolder?.children && !selectedFolder?.documents?.length && <p>file yoki folder topilmadi !</p>}
+                    {/*  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ */}
 
                 </div>
             </div>
 
             {/* --------- modals ---------- */}
             <AddDocumentModal
-                show={showDocumentModal}
-                handleClose={() => setShowDocumentModal(false)}
+                show={modals.showDocumentModal}
+                handleClose={() => closeModal('showDocumentModal')}
                 onSave={handleDocumentUpload}
                 documentTypes={docimentType}
             />
             <UploadFileModal
-                show={showFileModal}
-                handleClose={() => setShowFileModal(false)}
+                show={modals.showFileModal}
+                handleClose={() => closeModal('showFileModal')}
                 onSave={handleFileUpload}
             />
             <AddFolderModal
-                show={showModal}
+                show={modals.showModal}
                 currentFolder={selectedFolder}
-                handleClose={() => setShowModal(false)}
+                handleClose={() => closeModal('showModal')}
                 onSave={handleAddFolder}
                 setmainFolder={setmainFolder}
             />
             <EditFolderModal
-                show={showEditFolderModal}
+                show={modals.showEditFolderModal}
                 currentFolder={selectedFolder}
-                handleClose={() => setShowEditFolderModal(false)}
+                handleClose={() => closeModal('showEditFolderModal')}
                 onSave={putFolderDocument}
                 setmainFolder={setmainFolder}
             />
             <DeletModal
-                show={showDeleteModal}
-                handleClose={() => setShowDeleteModal(false)}
+                show={modals.showDeleteModal}
+                handleClose={() => closeModal('showDeleteModal')}
                 onSave={deleteFolder}
             />
         </div>

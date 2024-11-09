@@ -47,7 +47,7 @@ export const DocumentProvider = ({ children }) => {
 
     useEffect(() => {
         fetchDocuments();
-    }, [currentPage]);
+    }, []);
 
     return (
         <DocumentContext.Provider value={{

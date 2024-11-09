@@ -1,11 +1,14 @@
 import { handleDownloadFolder } from "../../components/zip";
+import { useModals } from "../../context/modalcontext";
 import { apirl, document_file_url } from "../../helpers/urls";
 import { useFetch } from "../../hooks/fetchData";
 import { getFileName } from "../../hooks/truncateText";
 import '../../styles/filePopUp.css'
 
-const DocumentFileContents = ({ file, openModal }) => {
+const DocumentFileContents = ({ file }) => {
     const { data, loading } = useFetch(document_file_url)
+    const { openModal } = useModals();
+
     if (loading) return 'Document is loading ...'
     return (
         <div className="">
@@ -18,9 +21,9 @@ const DocumentFileContents = ({ file, openModal }) => {
                     <p className="mb-0">{file.title}</p>
                     <p className="mb-0">{file.created_at}</p>
                     <p className="mb-0">{file.permission}</p>
-                    <p onClick={() => handleDownloadFolder(file.files)} className="d-flex mb-0" style={{ width: 20 }}>
+                    {/* <p onClick={() => handleDownloadFolder(file.files)} className="d-flex mb-0" style={{ width: 20 }}>
                         <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
-                    </p>
+                    </p> */}
                 </li>
             </ul>
             <div className="container">
@@ -46,7 +49,7 @@ const DocumentFileContents = ({ file, openModal }) => {
                             <p className="col-md-12 mt-4">Bu fayl identifikatori uchun hech qanday hujjat topilmadi...</p>
                         )}
                     <br />
-                    <div onClick={openModal} className="col-md-3 mt-4">
+                    <div onClick={() => openModal('showFileModal')} className="col-md-3 mt-4">
                         <div className="card shadow-sm h-100">
                             <div className="card-body d-flex flex-column justify-content-center align-items-center">
                                 <div className="section-icon text-center">

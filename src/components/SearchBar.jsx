@@ -3,22 +3,26 @@ import { debounce } from 'lodash';
 import { DocumentContext } from '../context/documents';
 import axios from 'axios';
 
-const SearchBar = () => {
+const SearchBar = ({page}) => {
     const { setDocuments, documentTypes } = useContext(DocumentContext);
     const [localSearchName, setLocalSearchName] = useState('');
     const [localSearchNumber, setLocalSearchNumber] = useState('');
     const [localCreatedDate, setLocalCreatedDate] = useState('');
     const [documentType, setDocumentType] = useState('');
+    const [documentPermition, setDocumentPermition] = useState('');
 
     const fetchDocuments = useCallback(async () => {
         const queryParams = new URLSearchParams();
+        if (page) queryParams.append('page', page);
         if (localSearchName) queryParams.append('title', localSearchName);
         if (localSearchNumber) queryParams.append('document_number', localSearchNumber);
         if (localCreatedDate) queryParams.append('created_at', localCreatedDate);
         if (documentType) queryParams.append('type', documentType);
+        if (documentPermition) queryParams.append('permission', documentPermition);
 
         const url = `http://127.0.0.1:8000/v1/documents/?${queryParams.toString()}`;
-
+        console.log(url);
+        
         try {
             const response = await axios.get(url);
             const data = response
@@ -27,14 +31,14 @@ const SearchBar = () => {
         } catch (error) {
             console.error("Failed to fetch documents:", error);
         }
-    }, [localSearchName, localSearchNumber, localCreatedDate, documentType, setDocuments]);
+    }, [localSearchName, localSearchNumber, localCreatedDate, documentType, setDocuments, documentPermition,page]);
 
     const debouncedFetchDocuments = debounce(fetchDocuments, 200);
 
     useEffect(() => {
         debouncedFetchDocuments();
         return () => debouncedFetchDocuments.cancel();
-    }, [localSearchName, localSearchNumber, localCreatedDate, documentType]);
+    }, [localSearchName, localSearchNumber, localCreatedDate, documentType,documentPermition,page]);
 
     return (
         <div className="search-bar">
@@ -63,12 +67,12 @@ const SearchBar = () => {
 
             {documentTypes.length > 0 ? (
                 <select
+                    style={{ width: 400 }}
                     className="form-select form-select-lg"
                     value={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
-                    aria-label="Select document type"
                 >
-                    <option value="">All</option>
+                    <option value="">All types</option>
                     {documentTypes.map((type) => (
                         <option key={type.id} value={type.name}>
                             {type.name}
@@ -79,16 +83,18 @@ const SearchBar = () => {
                 <p>Loading options...</p>
             )}
             <select
+                placeholder={'sdasda'}
+                style={{ width: 400 }}
                 className="form-select form-select-lg"
-                value={documentType}
-                onChange={(e) => setDocumentType(e.target.value)}
+                value={documentPermition}
+                onChange={(e) => setDocumentPermition(e.target.value)}
                 aria-label="Select document type"
             >
+                <option value="" selected disabled >permission</option>
                 <option value="">All</option>
                 <option value="DEPARTMENT">Departmant</option>
                 <option value="PUBLIC">Public</option>
-                <option value="PRIVETE">Privete</option>
-                
+                <option value="PRIVATE">Private</option>
             </select>
         </div>
     );
