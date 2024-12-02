@@ -17,12 +17,12 @@ const DocumentFileContents = ({ file }) => {
                     className="list-group-item d-flex justify-content-between align-items-center"
                     style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
                 >
-                    <i class="fa-solid fa-file fa-1x"></i>
+                    <i className="fa-solid fa-file fa-1x"></i>
                     <p className="mb-0">{file.title}</p>
                     <p className="mb-0">{file.created_at}</p>
                     <p className="mb-0">{file.permission}</p>
                     {/* <p onClick={() => handleDownloadFolder(file.files)} className="d-flex mb-0" style={{ width: 20 }}>
-                        <i style={{ fontSize: 20 }} class="fa-solid fa-download text-dark"></i>
+                        <i style={{ fontSize: 20 }} className="fa-solid fa-download text-dark"></i>
                     </p> */}
                 </li>
             </ul>
@@ -33,7 +33,7 @@ const DocumentFileContents = ({ file }) => {
                             <div className="card shadow-sm h-100">
                                 <div className="card-body d-flex flex-column justify-content-center align-items-center">
                                     <div className="section-icon mb-3">
-                                        <i class="fa-regular fa-file-lines fa-2x"></i>
+                                        <i className="fa-regular fa-file-lines fa-2x"></i>
                                     </div>
                                     <div className="file-container">
                                         <p className="file-name">

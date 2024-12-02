@@ -79,7 +79,7 @@ body {
     background-color: #fff
 }
 
-[tabindex="-1"]:focus {
+[tabIndex="-1"]:focus {
     outline: 0 !important
 }
 
@@ -187,18 +187,18 @@ a:hover {
     text-decoration: underline
 }
 
-a:not([href]):not([tabindex]) {
+a:not([href]):not([tabIndex]) {
     color: inherit;
     text-decoration: none
 }
 
-a:not([href]):not([tabindex]):focus,
-a:not([href]):not([tabindex]):hover {
+a:not([href]):not([tabIndex]):focus,
+a:not([href]):not([tabIndex]):hover {
     color: inherit;
     text-decoration: none
 }
 
-a:not([href]):not([tabindex]):focus {
+a:not([href]):not([tabIndex]):focus {
     outline: 0
 }
 

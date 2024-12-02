@@ -15,7 +15,7 @@ const FileContents = ({ file, clear, setSelectedDocument, setSelecteditem }) => 
                             className="list-group-item d-flex justify-content-between align-items-center"
                             style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
                         >
-                            <i class="fa-solid fa-file fa-1x"></i>
+                            <i className="fa-solid fa-file fa-1x"></i>
                             <p className="mb-0 hover-underline" onClick={() => setSelectedDocument(child)}>{child.title}</p>
 
                             <p className="mb-0">{child.created_at}</p>
@@ -31,7 +31,7 @@ const FileContents = ({ file, clear, setSelectedDocument, setSelecteditem }) => 
                                         style={{ textDecoration: 'none' }}
                                         aria-expanded="false">
                                         {/* 3 Dots Icon */}
-                                        <i class="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
+                                        <i className="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
                                     </button>
 
                                     {/* Dropdown Menu */}
@@ -40,6 +40,7 @@ const FileContents = ({ file, clear, setSelectedDocument, setSelecteditem }) => 
                                         {/* Edit option */}
                                         <li>
                                             <a className="dropdown-item" href="#" onClick={() => {
+                                                child.documentType = 'documentEdit'
                                                 setSelecteditem(child);
                                                 openModal('showDocumentModal')
                                             }}>
@@ -50,6 +51,7 @@ const FileContents = ({ file, clear, setSelectedDocument, setSelecteditem }) => 
                                         {/* Delete option */}
                                         <li>
                                             <a className="dropdown-item" href="#" onClick={() => {
+                                                child.documentType = 'documentDelete'
                                                 setSelecteditem(child);
                                                 openModal('showDeleteModal')
                                             }}>

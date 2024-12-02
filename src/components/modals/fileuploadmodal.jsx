@@ -20,11 +20,11 @@ function UploadFileModal({ show, handleClose, onSave }) {
 
     return (
 
-        <div className={`modal fade-up ${show ? 'show' : ''}`} style={{ display: show ? 'block' : 'none' }} id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Fayl yuklash</h5>
+        <div className={`modal fade-up ${show ? 'show' : ''}`} style={{ display: show ? 'block' : 'none' }} id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog">
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title" id="staticBackdropLabel">Fayl yuklash</h5>
                         <button type="button" className="btn close btn-light" onClick={handleClose} aria-label="Close">
                             <span className='text-md' aria-hidden="true">&times;</span>
                         </button>
@@ -32,17 +32,17 @@ function UploadFileModal({ show, handleClose, onSave }) {
                     <div className="modal-body">
                         <input ref={fileUpload} type="file" id="formFile" className="form-control" onChange={handleFileChange} />
                         {/* <div className='mt-4'>
-                            <div class="form-check">
-                                <input onChange={(e) => changeMain(e)} class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                                <label class="form-check-label" for="defaultCheck1">
+                            <div className="form-check">
+                                <input onChange={(e) => changeMain(e)} className="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                                <label className="form-check-label" htmlFor="defaultCheck1">
                                    yopiq holatda saqlash
                                 </label>
                             </div>
                         </div> */}
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onClick={handleClose}>Bekor qilish</button>
-                        <button type="button" class="btn btn-primary" onClick={handleSave}>Yuklash</button>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={handleClose}>Bekor qilish</button>
+                        <button type="button" className="btn btn-primary" onClick={handleSave}>Yuklash</button>
                     </div>
                 </div>
             </div>

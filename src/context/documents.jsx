@@ -9,8 +9,8 @@ export const DocumentProvider = ({ children }) => {
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [pageSize, setPageSize] = useState(5);
-    const [totalPages, setTotalPages] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(10);
     const [documentTypes, setDocumentTypes] = useState([]);
 
     useEffect(() => {

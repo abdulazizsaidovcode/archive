@@ -1,10 +1,9 @@
 // Pagination.js
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  
-
+  totalPages 
   return (
     <div className="pagination-container">
       {/* Pagination controls */}
@@ -17,10 +16,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
           Previous
         </button>
 
-        {[...Array(totalPages)].map((_, idx) => (
+        {[...Array(totalPages )].map((_, idx) => (
           <button
             key={idx + 1}
-            className={`pagination-btn ${currentPage === idx + 1 ? 'active' : ''}`}
+            className={`pagination-btn ${
+              currentPage === idx + 1 ? "active" : ""
+            }`}
             onClick={() => onPageChange(idx + 1)}
           >
             {idx + 1}

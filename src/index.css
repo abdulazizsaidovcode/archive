@@ -8,6 +8,7 @@
 @import url('./styles/text-colors.css');
 @import url('./styles/pagenation.css');
 @import url('./styles/modals.css');
+@import url('./styles/footer.css');
 
 @import url('./lib/bootstrap/bootstrap.min.css');
 
@@ -41,33 +42,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Navbar (navigatsiya paneli) uslublari */
-/* nav {
-  background-color: #007BFF;
-  padding: 10px;
-  margin-bottom: 20px;
-}
-
-nav ul {
-  list-style-type: none;
-  text-align: center;
-}
-
-nav ul li {
-  display: inline;
-  margin-right: 20px;
-}
-
-nav ul li a {
-  color: white;
-  font-weight: bold;
-}
-
-nav ul li a:hover {
-  color: #ddd;
-} */
-
-/* Qidiruv formasi uslublari */
 form {
   margin-bottom: 20px;
   text-align: center;
@@ -90,40 +64,11 @@ form button {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  /* margin-left: 10px; */
 }
 
 form button:hover {
   background-color: #0056b3;
 }
-
-/* Qonunlar ro'yxati uslublari */
-/* ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-ul li {
-  background-color: white;
-  margin-bottom: 10px;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-ul li a {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-ul li a:hover {
-  color: #0056b3;
-}
-
-ul li p {
-  margin-top: 5px;
-  color: #666;
-} */
 
 /* Hujjatlar tafsiloti (LawDetails) uslublari */
 .law-details {
@@ -186,17 +131,7 @@ table tbody tr:hover {
   background-color: #f1f1f1;
 }
 
-a {
-  color: #007BFF;
-  text-decoration: none;
-}
 
-a:hover {
-  text-decoration: underline;
-}
-.uploadFile {
-
-}
 .accordion-button.active {
   background-color: #007bff;
   color: white;

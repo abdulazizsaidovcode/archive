@@ -14,7 +14,7 @@ const FolderContents = ({ folder, onFolderSelect, setSelecteditem, setMoveFolder
               className="list-group-item d-flex justify-content-between align-items-center"
               style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
             >
-              <i class="fa-solid fa-folder fa-1x"></i>
+              <i className="fa-solid fa-folder fa-1x"></i>
               <p className="hover-underline " style={{ marginBottom: 0 }} onClick={() => onFolderSelect(child)}>{child.name} </p>
               <p> </p>
               <p> </p>
@@ -32,7 +32,7 @@ const FolderContents = ({ folder, onFolderSelect, setSelecteditem, setMoveFolder
                     style={{ textDecoration: 'none' }}
                     aria-expanded="false">
                     {/* 3 Dots Icon */}
-                    <i class="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
+                    <i className="fa-solid fa-ellipsis-vertical" style={{ fontSize: 20 }}></i>
                   </button>
 
                   {/* Dropdown Menu */}
@@ -40,13 +40,14 @@ const FolderContents = ({ folder, onFolderSelect, setSelecteditem, setMoveFolder
                     {/* Download option */}
                     <li>
                       <a className="dropdown-item" href="#" onClick={() => setMoveFolder(child)}>
-                        <i class="fa-solid fa-turn-up text-dark" style={{ fontSize: 20 }}></i> Move
+                        <i className="fa-solid fa-turn-up text-dark" style={{ fontSize: 20 }}></i> Move
                       </a>
                     </li>
 
                     {/* Edit option */}
                     <li>
                       <a className="dropdown-item" href="#" onClick={() => {
+                        child.documentType = 'folderEdit'
                         setSelecteditem(child);
                         openModal('showEditFolderModal')
                       }}>
@@ -57,6 +58,7 @@ const FolderContents = ({ folder, onFolderSelect, setSelecteditem, setMoveFolder
                     {/* Delete option */}
                     <li>
                       <a className="dropdown-item" href="#" onClick={() => {
+                        child.documentType = 'folderDelete'
                         setSelecteditem(child);
                         openModal('showDeleteModal')
                       }}>

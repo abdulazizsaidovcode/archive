@@ -4,9 +4,11 @@ import { useFetch } from '../../hooks/fetchData';
 import { document_type_url } from '../../helpers/urls';
 
 const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTypes }) => {
+    let permissionOptions = ['PUBLIC', 'PRIVATE', 'DEPARTMENT']
+
     const [folderName, setFolderName] = useState('');
     const [title, setTitle] = useState('');
-    const [permission, setPermission] = useState('PUBLIC');
+    const [permission, setPermission] = useState('');
     const [documentType, setDocumentType] = useState('');
     const [documentNumber, setDocumentNumber] = useState('')
 
@@ -79,10 +81,11 @@ const AddDocumentModal = ({ show, handleClose, currentFolder, onSave, documentTy
                                 value={permission}
                                 onChange={(e) => setPermission(e.target.value)}
                             >
-                                <option value="PUBLIC">Public</option>
-                                <option value="PRIVATE">Private</option>
-                                <option value="DEPARTMENT">department</option>
-                            </select>›
+                                <option value="" disabled>Tanlang</option>
+                                {permissionOptions && permissionOptions.map((option) => (
+                                    <option value={option}>{option}</option>
+                                ))}
+                            </select>
 
                             {/* Document Type input */}
                             <label htmlFor="documentType" className="mt-3">Hujjat turi</label>

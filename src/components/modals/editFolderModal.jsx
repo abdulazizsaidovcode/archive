@@ -24,7 +24,7 @@ const EditFolderModal = ({ show, handleClose, currentFolder, onSave, setmainFold
   }
 
   return (
-    <div className={`modal fade-up ${show ? 'show' : ''}`} style={{ display: show ? 'block' : 'none' }} tabIndex="-1" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden={!show}>
+    <div className={`modal fade-up ${show ? 'show' : ''}`} style={{ display: show ? 'block' : 'none' }} tabIndex="-1" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden={!show}>
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
@@ -45,17 +45,17 @@ const EditFolderModal = ({ show, handleClose, currentFolder, onSave, setmainFold
                 />
               </div>
               <div className='mt-4'>
-                <div class="form-check">
-                  <input onChange={(e) => changeMain(e)} class="form-check-input" type="checkbox" value="" id="defaultCheck1" />
-                  <label class="form-check-label" for="defaultCheck1">
+                <div className="form-check">
+                  <input onChange={(e) => changeMain(e)} className="form-check-input" type="checkbox" value="" id="defaultCheck1" />
+                  <label className="form-check-label" htmlFor="defaultCheck1">
                     main folder sifatida belgilash
                   </label>
                 </div>
               </div>
               {!mainFolders &&
                 <div className='d-flex align-items-end mt-3'>
-                  <i class="fa-solid fa-folder fa-2x mr-1"></i>
-                  <i class="fa-solid fa-arrow-left fa-1x mr-3 text-success"></i>
+                  <i className="fa-solid fa-folder fa-2x mr-1"></i>
+                  <i className="fa-solid fa-arrow-left fa-1x mr-3 text-success"></i>
                   <div className='d-flex align-items-end'>
                     <p className=" mb-0">{currentFolder ? currentFolder.name : 'folder - tanleng'} </p>
                     {currentFolder && <p className='mb-0 ml-2'>folderi ichiga yaratmoqdasiz !</p>}

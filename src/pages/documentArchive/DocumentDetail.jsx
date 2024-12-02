@@ -23,7 +23,7 @@ function DocumentDetail() {
     if (!document) return <div className='container'><h1>Loading ....</h1></div>
 
     return (
-        <div className='container pt-4'>
+        <div className='container pt-4 pb-5'>
             <div className='d-flex align-items-end'>
                 <h1 className='mr-3'>Document </h1>
                 <h2 className='text-gray'>{document.title}</h2>
@@ -35,11 +35,10 @@ function DocumentDetail() {
                 <p><strong>Document turi:</strong> {documentTypes &&  documentTypes.find((type) => type.id == document.document_type).name}</p>
                 <p><strong>Permission:</strong> {document.permission}</p>
             </div>
-            <div className="row">
+            <div className="row pb-3" style={{ height: document.files.length < 8  ? '60vh' : 'max-content'}}>
                 {document.files.length > 0 ?
                     document.files.map((child) =>
-
-                        <a href={new URL(apirl + child.file)} target="blank" className="col-md-3 mt-4" key={child.id}>
+                        <a href={new URL(apirl + child.file)} target="blank" className="col-md-3 mt-4" key={child.id} style={{height: 'max-content'}}>
                             <div className="card shadow-sm h-100 pt-3">
                                 <div className="card-body d-flex flex-column justify-content-center align-items-center">
                                     <div className="section-icon mb-3">
@@ -53,7 +52,7 @@ function DocumentDetail() {
                                     </div>
                                 </div>
                                 <div className='card-body pt-0'>
-                                    <i class="fa-solid fa-arrow-right fa-2x"></i>
+                                    <i className="fa-solid fa-arrow-right fa-2x"></i>
                                 </div>
                             </div>
                         </a>

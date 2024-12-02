@@ -10,27 +10,27 @@ export const DeletModal = ({ show, handleClose, onSave }) => {
             data-bs-keyboard="false"
             aria-hidden={!show}
         >
-            <div class="modal-dialog modal-confirm">
-                <div class="modal-content">
-                    <div class="modal-header pb-0">
+            <div className="modal-dialog modal-confirm">
+                <div className="modal-content">
+                    <div className="modal-header pb-0">
                         <p type="button" className="close" onClick={handleClose} aria-label="Close">
                             <span className='text-md' aria-hidden="true">&times;</span>
                         </p>
                     </div>
-                    <div class="modal-body pt-0 d-flex flex-column align-items-center">
-                        <div onClick={handleClose} class="icon-box">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                    <div className="modal-body pt-0 d-flex flex-column align-items-center">
+                        <div onClick={handleClose} className="icon-box">
+                            <i className="fa-solid fa-triangle-exclamation"></i>
                         </div>
-                        <h4 class="modal-title">Are you sure?</h4>
+                        <h4 className="modal-title">Are you sure?</h4>
                     </div>
-                    <div class="modal-body">
+                    <div className="modal-body">
                         <p>Do you really want to delete these records? This process cannot be undone.</p>
                     </div>
                     <div>
-                        <button onClick={() => handleClose()} type="button" class="btn btn-info">Cancel</button>
+                        <button onClick={() => handleClose()} type="button" className="btn btn-info">Cancel</button>
                         <button onClick={() => {
                             onSave()
-                        }} type="button" class="btn btn-danger">Delete</button>
+                        }} type="button" className="btn btn-danger">Delete</button>
                     </div>
                 </div>
             </div>

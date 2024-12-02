@@ -1,5 +1,5 @@
 
-const MoveFolder = ({ folder, parentFolder, canselmoveFolder }) => {
+const MoveFolder = ({ folder, parentFolder, canselmoveFolder, moveFolder }) => {
     console.log(folder);
     console.log(parentFolder);
 
@@ -11,7 +11,7 @@ const MoveFolder = ({ folder, parentFolder, canselmoveFolder }) => {
                         className="list-group-item d-flex justify-content-between align-items-center py-1 "
                         style={{ cursor: 'pointer' }} // Ko'rsatkichni qo'shimcha sifatida o'zgartiramiz
                     >
-                        <i class="fa-solid fa-folder fa-1x"></i>
+                        <i className="fa-solid fa-folder fa-1x"></i>
                         <p className="mb-0 p-1"> {folder.name}</p>
                         <p className="hover-underline" style={{ marginBottom: 0 }}> </p>
                         <p> </p>
@@ -31,7 +31,7 @@ const MoveFolder = ({ folder, parentFolder, canselmoveFolder }) => {
             <div>
                 <div className="d-flex justify-content-between w-100 align-items-center">
                     <h5>siz ko'chirmoqchi bolgan folder nomi: {parentFolder.name}</h5>
-                    <button className="btn bg-primary text-white"> bu folderga ko'chirish</button>
+                    <button className="btn bg-primary text-white" onClick={() => moveFolder()}> bu folderga ko'chirish</button>
                 </div>
             </div>
         </div>
