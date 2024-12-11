@@ -57,7 +57,7 @@ const SearchBar = ({ page }) => {
   ]);
 
   return (
-    <div className="search-bar">
+    <div className="search-bar" style={{maxWidth: '100%', height: 60}}>
       <input
         type="text"
         placeholder="hujjat nomi"
@@ -82,8 +82,8 @@ const SearchBar = ({ page }) => {
       />
 
       <select
-        style={{ width: 400 }}
-        className="form-select form-select-lg"
+        style={{ width: 300 }}
+        className="form-select my-1"
         value={documentType}
         onChange={(e) => setDocumentType(e.target.value)}
       >

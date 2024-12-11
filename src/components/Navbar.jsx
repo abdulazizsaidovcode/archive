@@ -5,7 +5,7 @@ import logoWhite from "../../public/logo-white.png";
 
 const Navbar = () => {
   return (
-    <nav className="navbar ">
+    <nav className="navbar position-fixed w-100" style={{top: 0,zIndex:1000}}>
       <div className="container overflow-hidden">
         <Link to="/" className="brand">
           <img

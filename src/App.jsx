@@ -24,6 +24,7 @@ function App() {
     <Router>
       <div className="App">
         <Navbar />
+        <div className=" pb-5 pt-3"></div>
         <Routes>
           <Route path="/" element={<DocumentArchive />} />
           <Route

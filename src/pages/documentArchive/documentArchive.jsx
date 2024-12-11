@@ -20,12 +20,11 @@ function DocumentArchive() {
   }
 
   return (
-    <div className="container mt-4">
+    <div className="container mt-4" style={{ height: '115vh'}}>
       <h1>Document Archive</h1>
       <SearchBar page={currentPage} />
       <div
         className="py-4"
-        style={{ height: '90vh'}}
       >
         <DocumentList documents={documents} />
       </div>

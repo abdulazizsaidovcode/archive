@@ -1,7 +1,7 @@
 // src/context/DocumentContext.js
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import { document_type_url } from '../helpers/urls';
+import { document_type_url, document_url } from '../helpers/urls';
 
 export const DocumentContext = createContext();
 
@@ -15,10 +15,10 @@ export const DocumentProvider = ({ children }) => {
 
     useEffect(() => {
         const fetchDocumentTypes = async () => {
+            let token = localStorage.getItem('access_token');
+
             try {
-                const { data } = await axios.get(document_type_url, {
-                    headers: { 'Authorization': `Bearer ${localStorage.getItem('access_token')}` }
-                });
+                const { data } = await axios.get(document_type_url);
                 setDocumentTypes(data);
             } catch (error) {
                 console.error('Error fetching document types:', error);
@@ -33,7 +33,7 @@ export const DocumentProvider = ({ children }) => {
         let query = `?page=${currentPage}`;
 
         try {
-            const { data } = await axios.get(`http://127.0.0.1:8000/v1/documents/${query}`, {
+            const { data } = await axios.get(`${document_url}${query}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             setDocuments(data.results);

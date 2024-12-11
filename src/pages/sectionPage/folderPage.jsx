@@ -43,9 +43,9 @@ const SectionsPage = () => {
   };
 
   return (
-    <div className="container pb-5">
-      <div className="d-flex align-items-center justify-content-between mt-4">
-        <h2>Document Sections</h2>
+    <div className="container pb-5" style={{height: '90vh'}}>
+      <div className="d-flex align-items-center justify-content-between mt-4" >
+        <h1>Document Sections</h1>
         <input
           type="text"
           placeholder="folder nomi"
@@ -54,7 +54,7 @@ const SectionsPage = () => {
           className="search-input"
         />
       </div>
-      <div className="mt-4" style={{ height: sections.length < 10 ? "65vh" : "max-content" }}>
+      <div className="mt-4" style={{ height: "max-content" }}>
         <div className="row" >
           {sections && sections.length ? (
             sections.map((section) => (

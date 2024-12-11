@@ -11,19 +11,21 @@ const DocumentList = ({ documents = [] }) => {
         navigate(`/document/${id}`);
     };
 
-    const handleDownloadClick = (documentId) => {
-        axios.get(`http://127.0.0.1:8000/v1/documents/${documentId}/download`, {
-            responseType: 'blob', // important for downloading files
-        }).then(response => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'document.pdf'); // or set dynamic filename
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        }).catch(error => console.error('Error downloading document:', error));
-    };
+    // const handleDownloadClick = (documentId) => {
+    //     axios.get(`http://127.0.0.1:8000/v1/documents/${documentId}/download`, {
+    //         responseType: 'blob', // important for downloading files
+    //     }).then(response => {
+    //         const url = window.URL.createObjectURL(new Blob([response.data]));
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', 'document.pdf'); // or set dynamic filename
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         link.remove();
+    //     }).catch(error => console.error('Error downloading document:', error));
+    // };
+    console.log(documents);
+    
     
     return (
 
@@ -35,7 +37,7 @@ const DocumentList = ({ documents = [] }) => {
                             <th>Hujjat Raqami</th>
                             <th>Qisqacha mazmuni</th>
                             <th>Sanasi</th>
-                            <th>Yuklab olish</th>
+                            {/* <th>Yuklab olish</th> */}
                             {/* <th>Actions</th> */}
                         </tr>
                     </thead>
@@ -54,12 +56,11 @@ const DocumentList = ({ documents = [] }) => {
                                 <td><strong>{document.document_number}</strong></td>
                                 <td>{document.title}</td>
                                 <td>{new Date(document.created_at).toLocaleDateString()}</td>
-                                <td>
-                                    {/* Hujjatni yuklab olish havolasi */}
+                                {/* <td>
                                     <a onClick={(e) => { e.stopPropagation(); handleDownloadClick(document.id); }} target='blank' href={document.file} download className="btn btn-primary">
                                         Yuklab olish
                                     </a>
-                                </td>
+                                </td> */}
 
                             </tr>
                         ))}
